@@ -2,160 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#360513">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1c1713">
     <meta name="description" content="A romantic acceptance and a promise for forever.">
-    <title>Our Forever Begins ❤️</title>
+    <title>Our Forever Begins</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ctext y=%2713%27 font-size=%2713%27 fill=%27%238a4c45%27%3E♥%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
-    <style>
-      :root {
-        color-scheme: dark;
-        --script: "Caveat", "Segoe Print", cursive;
-        --serif: "Cormorant Garamond", Georgia, serif;
-      }
-
-      * { box-sizing: border-box; }
-      html, body { width: 100%; min-height: 100%; margin: 0; }
-      body {
-        position: relative;
-        display: grid;
-        min-height: 100vh;
-        min-height: 100dvh;
-        place-items: center;
-        overflow: hidden;
-        padding: clamp(4.2rem, 8vh, 5.5rem) 1rem clamp(3.6rem, 7vh, 5rem);
-        background:
-          radial-gradient(ellipse at 50% 48%, rgba(133, 12, 49, .66), transparent 58%),
-          radial-gradient(ellipse at 10% 92%, rgba(215, 64, 64, .16), transparent 30%),
-          linear-gradient(145deg, #23020c, #4a061b 54%, #20030d);
-        color: #32101a;
-      }
-
-      .lights { position: fixed; z-index: 0; width: min(100vw, 96rem); height: auto; pointer-events: none; filter: drop-shadow(0 0 12px rgba(255, 183, 72, .65)); }
-      .lights--top { top: -3.6rem; left: 50%; transform: translateX(-50%); }
-      .lights--left, .lights--right { top: 26%; width: min(54vh, 27rem); opacity: .55; }
-      .lights--left { left: -16rem; transform: rotate(90deg); }
-      .lights--right { right: -16rem; transform: rotate(270deg); }
-      .rose { position: fixed; z-index: 1; width: clamp(7rem, 15vw, 13rem); pointer-events: none; filter: drop-shadow(0 7px 12px rgba(18, 0, 5, .42)); }
-      .rose--top { top: .2rem; left: .15rem; transform: rotate(-12deg); transform-origin: 35% 30%; animation: rose-sway-top 6.5s ease-in-out infinite; }
-      .rose--bottom { right: .1rem; bottom: .15rem; transform: rotate(168deg); transform-origin: 65% 65%; animation: rose-sway-bottom 7.5s ease-in-out -2s infinite; }
-      .top-note { position: fixed; z-index: 4; top: .8rem; right: clamp(.8rem, 3vw, 2.5rem); margin: 0; color: #ffe9e9; font: 600 clamp(1.6rem, 3.3vw, 2.8rem)/1 var(--script); transform: rotate(-4deg); }
-
-      .acceptance-paper {
-        position: relative;
-        z-index: 3;
-        display: grid;
-        align-content: center;
-        justify-items: center;
-        gap: clamp(.45rem, 1.5vh, 1rem);
-        width: min(88vw, 68rem);
-        max-height: calc(100dvh - 8rem);
-        padding: clamp(1.3rem, 4vh, 3rem) clamp(1rem, 6vw, 5rem);
-        isolation: isolate;
-        clip-path: polygon(1.1% 1%, 8% .5%, 16% 1%, 24% .45%, 33% 1%, 43% .5%, 52% 1%, 62% .4%, 72% 1%, 83% .45%, 94% 1%, 99% .7%, 98.7% 14%, 99.3% 28%, 98.6% 43%, 99.4% 58%, 98.7% 73%, 99.2% 88%, 98.5% 99%, 86% 98.5%, 74% 99%, 62% 98.4%, 50% 99%, 39% 98.5%, 27% 99%, 15% 98.4%, 1% 99%, .6% 84%, 1.2% 70%, .6% 56%, 1.2% 42%, .6% 28%, 1.2% 14%);
-        background:
-          linear-gradient(125deg, rgba(255,255,255,.52), transparent 40%),
-          repeating-linear-gradient(0deg, rgba(118,71,44,.035) 0 1px, transparent 1px 5px),
-          radial-gradient(ellipse at 35% 18%, #fff7e9, transparent 52%),
-          #f4dfbd;
-        box-shadow: 0 24px 70px rgba(0,0,0,.48), 0 0 30px rgba(255,183,90,.25), inset 0 0 34px rgba(142,91,56,.1);
-        text-align: center;
-      }
-
-      .acceptance-paper::before, .acceptance-paper::after { position: absolute; z-index: -1; inset: 0; pointer-events: none; content: ""; }
-      .acceptance-paper::before { background: radial-gradient(ellipse at 8% 10%, rgba(143,57,40,.09), transparent 34%), radial-gradient(ellipse at 92% 86%, rgba(143,57,40,.1), transparent 30%); }
-      .divider { display: flex; align-items: center; justify-content: center; gap: .65rem; width: min(74%, 27rem); color: #9b1c39; font: 600 clamp(1.5rem, 3vw, 2.3rem)/.8 var(--script); }
-      .divider span { height: 1px; flex: 1; background: linear-gradient(90deg, transparent, #9d1c39); }
-      .divider span:last-child { transform: scaleX(-1); }
-      h1 { margin: 0; color: #8f102e; font: 700 clamp(3.2rem, 8vw, 6.4rem)/.9 var(--script); text-shadow: 0 2px 0 rgba(255,255,255,.55), 0 0 22px rgba(203,36,71,.16); }
-      .happiest { margin: 0; color: #701027; font: 700 clamp(1.8rem, 4vw, 3.2rem)/1.03 var(--script); }
-      .love { margin: 0; color: #8f102e; font: 700 clamp(2rem, 4.8vw, 3.8rem)/1 var(--script); }
-      .promise { max-width: 54rem; margin: .15rem 0 0; color: #24181a; font: 700 clamp(1.15rem, 2vw, 1.65rem)/1.25 var(--serif); text-wrap: pretty; }
-      .heart-row { color: #aa193b; font: 500 clamp(1.5rem, 3vw, 2.4rem)/1 var(--script); letter-spacing: .35em; text-shadow: 0 0 13px rgba(198,22,60,.32); }
-      .petals { position: fixed; z-index: 2; right: 12%; bottom: 1.5rem; left: 12%; height: 1.5rem; pointer-events: none; }
-      .petals i { position: absolute; bottom: 0; width: 1.4rem; height: .7rem; border-radius: 100% 0 100% 0; background: linear-gradient(135deg, #f62d4f, #85071f); box-shadow: 0 0 9px rgba(240,23,54,.4); transform: rotate(var(--angle, 20deg)); }
-      .petals i:nth-child(1) { left: 2%; --angle: 15deg; }
-      .petals i:nth-child(2) { left: 22%; bottom: -.25rem; --angle: 62deg; }
-      .petals i:nth-child(3) { left: 42%; --angle: 38deg; }
-      .petals i:nth-child(4) { right: 34%; bottom: -.2rem; --angle: 6deg; }
-      .petals i:nth-child(5) { right: 17%; --angle: 46deg; }
-      .petals i:nth-child(6) { right: 2%; bottom: -.3rem; --angle: 14deg; }
-      .floating-hearts { position: fixed; z-index: 4; inset: 0; overflow: hidden; pointer-events: none; }
-      .floating-heart { position: absolute; bottom: -2rem; left: var(--left); color: #ff6683; font-size: var(--size); opacity: 0; text-shadow: 0 0 14px rgba(255,48,92,.68); animation: heart-rise var(--duration) ease-out var(--delay) infinite; }
-      @keyframes rose-sway-top { 0%, 100% { transform: rotate(-12deg) translateY(0); } 50% { transform: rotate(-8deg) translateY(-5px); } }
-      @keyframes rose-sway-bottom { 0%, 100% { transform: rotate(168deg) translateY(0); } 50% { transform: rotate(172deg) translateY(-5px); } }
-      @keyframes heart-rise { 0% { opacity: 0; transform: translateY(0) scale(.65) rotate(-12deg); } 14% { opacity: .8; } 78% { opacity: .6; } 100% { opacity: 0; transform: translateY(-105vh) scale(1.2) rotate(18deg); } }
-      @media (max-width: 700px) {
-        body { padding: 4rem .5rem 3.2rem; }
-        .lights--top { top: -2.2rem; width: 145vw; }
-        .lights--left, .lights--right { opacity: .32; }
-        .lights--left { left: -17rem; }
-        .lights--right { right: -17rem; }
-        .rose { width: clamp(5rem, 20vw, 7rem); opacity: .82; }
-        .rose--top { top: .1rem; left: -.8rem; }
-        .rose--bottom { right: -.8rem; bottom: .1rem; }
-        .top-note { top: .55rem; right: .6rem; font-size: clamp(1.35rem, 5.5vw, 1.8rem); }
-        .acceptance-paper { width: calc(100vw - 1rem); max-height: calc(100dvh - 7.2rem); gap: clamp(.45rem, 1.4vh, .8rem); padding: clamp(1.25rem, 4vh, 2.2rem) clamp(1rem, 5vw, 1.4rem); }
-        h1 { font-size: clamp(3rem, 13vw, 4.5rem); }
-        .happiest { font-size: clamp(1.65rem, 7vw, 2.3rem); }
-        .love { font-size: clamp(1.8rem, 7.5vw, 2.7rem); }
-        .promise { font-size: clamp(1.05rem, 4.2vw, 1.28rem); line-height: 1.22; }
-        .divider { width: 80%; }
-        .petals { right: 4%; left: 4%; bottom: .6rem; }
-      }
-      @media (max-width: 380px) {
-        .acceptance-paper { padding-inline: .85rem; gap: .45rem; }
-        h1 { font-size: 2.8rem; }
-        .happiest { font-size: 1.55rem; }
-        .love { font-size: 1.75rem; }
-        .promise { font-size: 1rem; line-height: 1.16; }
-      }
-      @media (orientation: landscape) and (max-height: 560px) {
-        body { padding-block: 2.4rem; }
-        .acceptance-paper { width: min(90vw, 68rem); max-height: calc(100dvh - 4.5rem); gap: .35rem; padding-block: .7rem; }
-        h1 { font-size: clamp(2.4rem, 10vh, 4rem); }
-        .happiest, .love { font-size: clamp(1.5rem, 5.5vh, 2.4rem); }
-        .promise { font-size: clamp(.95rem, 3vh, 1.25rem); line-height: 1.1; }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
-      }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css?v=40">
   </head>
-  <body>
-    <img class="lights lights--top" src="./images/fairy-lights.png" alt="" aria-hidden="true">
-    <img class="lights lights--left" src="./images/fairy-lights.png" alt="" aria-hidden="true">
-    <img class="lights lights--right" src="./images/fairy-lights.png" alt="" aria-hidden="true">
-    <img class="rose rose--top" src="./images/page10-flowers.png" alt="" aria-hidden="true">
-    <img class="rose rose--bottom" src="./images/page10-flowers.png" alt="" aria-hidden="true">
-    <p class="top-note">My Love... ♡</p>
-
-    <main class="acceptance-paper" aria-labelledby="acceptance-title">
-      <div class="divider" aria-hidden="true"><span></span>♡<span></span></div>
-      <h1 id="acceptance-title">YAYYYY!!! ❤️</h1>
-      <p class="happiest">You just made me the happiest person in the world! ❤️</p>
-      <p class="love">I Love You So Much, My Bangaram! ❤️</p>
-      <p class="promise">From this moment, let's create our own beautiful forever. I promise to stand beside you in every situation, love you, support you and choose you every single day. ❤️</p>
-      <div class="divider" aria-hidden="true"><span></span>♡<span></span></div>
-      <div class="heart-row" aria-hidden="true">♡ ♥ ♡ ♥ ♡</div>
+  <body class="reader standalone">
+    <main class="page" aria-labelledby="acceptance-title">
+      <div class="rule rule--small" aria-hidden="true"><span></span><b>❦</b><span></span></div>
+      <h1 class="standalone-title" id="acceptance-title">YAYYYY!!!&nbsp;<span class="heart" aria-hidden="true">♥</span></h1>
+      <p class="standalone-lead">You just made me the happiest person in the world!&nbsp;<span class="heart" aria-hidden="true">♥</span></p>
+      <p class="finale-line">I Love You So Much, My Bangaram!&nbsp;<span class="heart" aria-hidden="true">♥</span></p>
+      <p>From this moment, let's create our own beautiful forever. I promise to stand beside you in every situation, love you, support you and choose you every single day.&nbsp;<span class="heart" aria-hidden="true">♥</span></p>
+      <div class="rule rule--small" aria-hidden="true"><span></span><b>♥</b><span></span></div>
+      <p><a class="standalone-link" href="./index.html#our-story-continues">Turn to the final page →</a></p>
     </main>
-
-    <div class="petals" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="floating-hearts" id="floating-hearts" aria-hidden="true"></div>
-    <script>
-      const heartField = document.getElementById("floating-hearts");
-      for (let index = 0; index < 16; index += 1) {
-        const heart = document.createElement("span");
-        heart.className = "floating-heart";
-        heart.textContent = index % 3 === 0 ? "♥" : "♡";
-        heart.style.setProperty("--left", `${Math.random() * 100}%`);
-        heart.style.setProperty("--size", `${14 + Math.random() * 18}px`);
-        heart.style.setProperty("--duration", `${8 + Math.random() * 8}s`);
-        heart.style.setProperty("--delay", `${-Math.random() * 15}s`);
-        heartField.append(heart);
-      }
-    </script>
   </body>
 </html>
