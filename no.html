@@ -2,88 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#360513">
-    <meta name="description" content="A playful little message from my heart.">
-    <title>A Little Message ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#1c1713">
+    <title>Try Again</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ctext y=%2713%27 font-size=%2713%27 fill=%27%238a4c45%27%3E♥%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
-    <style>
-      :root { --script: "Caveat", "Segoe Print", cursive; }
-      * { box-sizing: border-box; }
-      html, body { width: 100%; height: 100%; margin: 0; }
-      body {
-        position: relative; display: grid; place-items: center; width: 100%; height: 100vh; height: 100dvh;
-        overflow: hidden; padding: 4.8rem 1rem 2rem; isolation: isolate; touch-action: pan-y;
-        background: radial-gradient(ellipse at 50% 45%, rgba(133,12,49,.6), transparent 58%), linear-gradient(145deg,#23020c,#4a061b 54%,#20030d);
-      }
-      .lights, .rose, .petals, .hearts { position: fixed; pointer-events: none; }
-      .lights { z-index: 0; width: min(100vw,96rem); filter: drop-shadow(0 0 12px rgba(255,183,72,.65)); }
-      .lights--top { top: -3.6rem; left: 50%; transform: translateX(-50%); }
-      .lights--side { top: 25%; width: min(54vh,27rem); opacity: .52; }
-      .lights--left { left: -16rem; transform: rotate(90deg); }
-      .lights--right { right: -16rem; transform: rotate(270deg); }
-      .rose { z-index: 2; width: clamp(7rem,15vw,13rem); filter: drop-shadow(0 7px 12px rgba(18,0,5,.42)); animation: rose-drift 7s ease-in-out infinite; }
-      .rose--top { top: .1rem; left: .1rem; transform: rotate(-12deg); transform-origin: 35% 30%; }
-      .rose--bottom { right: .1rem; bottom: .1rem; transform: rotate(168deg); transform-origin: 65% 65%; animation-delay: -2s; }
-      @keyframes rose-drift { 0%,100% { translate: 0 0; } 50% { translate: 0 -5px; } }
-      .top-note { position: fixed; z-index: 4; top: .8rem; right: clamp(1rem,4vw,3rem); margin: 0; color: #fff0f2; font: 600 clamp(1.6rem,3.3vw,2.8rem)/1 var(--script); text-shadow: 0 0 12px rgba(255,134,166,.55); }
-      .message-paper { position: relative; z-index: 3; display: grid; place-items: center; width: min(88vw,68rem); min-height: min(52vh,28rem); max-height: calc(100dvh - 9rem); padding: clamp(2rem,7vh,5rem) clamp(1rem,6vw,5rem); isolation: isolate; clip-path: polygon(1.1% 1%,8% .5%,16% 1%,24% .45%,33% 1%,43% .5%,52% 1%,62% .4%,72% 1%,83% .45%,94% 1%,99% .7%,98.7% 14%,99.3% 28%,98.6% 43%,99.4% 58%,98.7% 73%,99.2% 88%,98.5% 99%,86% 98.5%,74% 99%,62% 98.4%,50% 99%,39% 98.5%,27% 99%,15% 98.4%,1% 99%,.6% 84%,1.2% 70%,.6% 56%,1.2% 42%,.6% 28%,1.2% 14%); background: linear-gradient(125deg,rgba(255,255,255,.52),transparent 40%),repeating-linear-gradient(0deg,rgba(118,71,44,.035) 0 1px,transparent 1px 5px),radial-gradient(ellipse at 35% 18%,#fff7e9,transparent 52%),#f4dfbd; box-shadow: 0 24px 70px rgba(0,0,0,.48),0 0 30px rgba(255,183,90,.25),inset 0 0 34px rgba(142,91,56,.1); text-align: center; }
-      .message-paper::before { position: absolute; z-index: -1; inset: 0; content: ""; background: radial-gradient(ellipse at 8% 10%,rgba(143,57,40,.09),transparent 34%),radial-gradient(ellipse at 92% 86%,rgba(143,57,40,.1),transparent 30%); }
-      .divider { display: flex; align-items: center; justify-content: center; gap: .65rem; width: min(72%,27rem); color: #9b1c39; font: 600 clamp(1.5rem,3vw,2.3rem)/.8 var(--script); }
-      .divider span { height: 1px; flex: 1; background: linear-gradient(90deg,transparent,#9d1c39); }
-      .divider span:last-child { transform: scaleX(-1); }
-      h1 { max-width: 55rem; margin: 0; color: #78132d; font: 700 clamp(2.5rem,7vw,5.5rem)/1.02 var(--script); text-shadow: 0 2px 0 rgba(255,255,255,.55),0 0 22px rgba(203,36,71,.16); text-wrap: balance; }
-      .petals { z-index: 2; right: 12%; bottom: 1.5rem; left: 12%; height: 1.5rem; }
-      .petals i { position: absolute; bottom: 0; width: 1.4rem; height: .7rem; border-radius: 100% 0 100% 0; background: linear-gradient(135deg,#f62d4f,#85071f); box-shadow: 0 0 9px rgba(240,23,54,.4); }
-      .petals i:nth-child(1) { left: 2%; }.petals i:nth-child(2) { left: 22%; bottom: -.25rem; }.petals i:nth-child(3) { left: 42%; }.petals i:nth-child(4) { right: 34%; bottom: -.2rem; }.petals i:nth-child(5) { right: 17%; }.petals i:nth-child(6) { right: 2%; bottom: -.3rem; }
-      .hearts { z-index: 4; inset: 0; overflow: hidden; }
-      .heart { position: absolute; bottom: -2rem; left: var(--left); color: #ff6683; font-size: var(--size); opacity: 0; text-shadow: 0 0 14px rgba(255,48,92,.68); animation: heart-rise var(--duration) ease-out var(--delay) infinite; }
-      @keyframes heart-rise { 0% { opacity: 0; transform: translateY(0) scale(.65); } 14% { opacity: .8; } 78% { opacity: .6; } 100% { opacity: 0; transform: translateY(-105vh) scale(1.2); } }
-      @media (max-width: 700px) {
-        body { padding: 4.4rem .5rem 2rem; }
-        .lights--top { top: -2.2rem; width: 145vw; }
-        .lights--side { opacity: .32; }
-        .rose { width: clamp(5rem,20vw,7rem); opacity: .88; }
-        .rose--top { top: .1rem; left: -.8rem; }
-        .rose--bottom { right: -.8rem; bottom: .1rem; }
-        .top-note { top: .65rem; right: .65rem; font-size: clamp(1.3rem,5.2vw,1.7rem); }
-        .previous { top: 3rem; left: .55rem; min-height: 2.55rem; padding: .35rem .75rem; font-size: 1rem; }
-        .message-paper { width: calc(100vw - 1rem); min-height: 44vh; max-height: calc(100dvh - 8.4rem); padding: 2rem 1.15rem; }
-        h1 { font-size: clamp(2.3rem,10vw,3.8rem); }
-        .petals { right: 4%; left: 4%; bottom: .6rem; }
-      }
-      @media (max-width: 380px) { h1 { font-size: clamp(2.1rem,9vw,2.8rem); } .message-paper { padding-inline: .9rem; } }
-      @media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; } }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css?v=40">
   </head>
-  <body>
-    <img class="lights lights--top" src="./images/fairy-lights.png" alt="" aria-hidden="true">
-    <img class="lights lights--side lights--left" src="./images/fairy-lights.png" alt="" aria-hidden="true">
-    <img class="lights lights--side lights--right" src="./images/fairy-lights.png" alt="" aria-hidden="true">
-    <img class="rose rose--top" src="./images/page10-flowers.png" alt="" aria-hidden="true">
-    <img class="rose rose--bottom" src="./images/page10-flowers.png" alt="" aria-hidden="true">
-    <p class="top-note">My Love... ♡</p>
-    <main class="message-paper">
-      <div class="divider" aria-hidden="true"><span></span>♡<span></span></div>
-      <h1>Musukoni velli 'Yes' button click chai. ❤️</h1>
-      <div class="divider" aria-hidden="true"><span></span>♥♡♥<span></span></div>
+  <body class="reader standalone">
+    <main class="page" aria-labelledby="no-title">
+      <div class="rule rule--small" aria-hidden="true"><span></span><b>❦</b><span></span></div>
+      <h1 class="standalone-lead" id="no-title">Musukoni velli 'Yes' button click chai.&nbsp;<span class="heart" aria-hidden="true">♥</span></h1>
+      <div class="rule rule--small" aria-hidden="true"><span></span><b>♥</b><span></span></div>
+      <p><a class="standalone-link" id="back-to-question" href="./index.html#one-little-question">← Back to the question</a></p>
     </main>
-    <div class="petals" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="hearts" id="floating-hearts" aria-hidden="true"></div>
     <script>
-      const heartField = document.getElementById("floating-hearts");
-      for (let index = 0; index < 16; index += 1) {
-        const heart = document.createElement("span");
-        heart.className = "heart";
-        heart.textContent = index % 3 === 0 ? "♥" : "♡";
-        heart.style.setProperty("--left", `${Math.random() * 100}%`);
-        heart.style.setProperty("--size", `${14 + Math.random() * 18}px`);
-        heart.style.setProperty("--duration", `${8 + Math.random() * 8}s`);
-        heart.style.setProperty("--delay", `${-Math.random() * 15}s`);
-        heartField.append(heart);
-      }
+      // Swipe right or press → to go back to the question, as before.
+      const questionUrl = "./index.html#one-little-question";
       let swipeStart = null;
       document.addEventListener("pointerdown", (event) => {
         if (!event.isPrimary || (event.pointerType === "mouse" && event.button !== 0)) return;
@@ -96,13 +33,11 @@
         if (window.getSelection()?.toString()) return;
         const dx = event.clientX - start.x;
         const dy = event.clientY - start.y;
-        if (dx > (start.type === "mouse" ? 85 : 48) && dx > Math.abs(dy) * 1.35 && Math.abs(dy) < 110) {
-          window.location.assign("./index.html#page-5");
-        }
+        if (dx > (start.type === "mouse" ? 85 : 48) && dx > Math.abs(dy) * 1.35 && Math.abs(dy) < 110) window.location.assign(questionUrl);
       });
       document.addEventListener("pointercancel", () => { swipeStart = null; });
       document.addEventListener("keydown", (event) => {
-        if (event.key === "ArrowRight" && !window.getSelection()?.toString()) window.location.assign("./index.html#page-5");
+        if (event.key === "ArrowRight" && !window.getSelection()?.toString()) window.location.assign(questionUrl);
       });
     </script>
   </body>
