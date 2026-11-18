@@ -465,11 +465,34 @@ function endFlight(leaf, turned) {
 }
 
 /*
+  The physical situation of a turn, passed to the sound engine so each
+  turn sounds the way that particular page would: where in the book it is,
+  how thick the stack it lands on is, which corner was taken and how fast.
+*/
+function turnContext(leaf, toTurned, extra = {}) {
+  const soft = state.leaves.filter((item) => !item.hard);
+  const total = Math.max(1, soft.length);
+  const index = state.leaves.indexOf(leaf);
+  const turnedOthers = soft.filter((item) => item.turned && item !== leaf).length;
+  const landingStack = toTurned ? turnedOthers : total - turnedOthers - 1;
+  return {
+    forward: toTurned,
+    depth: index / Math.max(1, state.leaves.length - 1),
+    stack: clamp(landingStack / total, 0, 1),
+    spread: state.mode === "spread",
+    corner: leaf.grab?.corner ?? "bottom",
+    grabY: leaf.grab?.y ?? .9,
+    bend: leaf.grab?.bend ?? .35,
+    ...extra,
+  };
+}
+
+/*
   Animate one leaf to its turned (toTurned = true) or flat state, starting
   from its current pose (e.g. where a drag was released). Soft pages travel
   along a gentle arc so the corner lifts as it crosses the spine.
 */
-async function animateLeaf(leaf, toTurned, { duration, ease = easeInOut, priority = 0, sound = 1 } = {}) {
+async function animateLeaf(leaf, toTurned, { duration, ease = easeInOut, priority = 0, sound = 1, motion = {} } = {}) {
   state.busy += 1;
   beginFlight(leaf, priority);
   const { W, H } = state;
@@ -477,7 +500,7 @@ async function animateLeaf(leaf, toTurned, { duration, ease = easeInOut, priorit
     const from = leaf.pose?.t ?? (leaf.turned ? 1 : 0);
     const to = toTurned ? 1 : 0;
     const time = duration ?? 1050 * Math.max(.35, Math.abs(to - from));
-    window.BookSound?.turn({ duration: time / 1000, hard: true, level: sound });
+    window.BookSound?.turn({ duration: time / 1000, hard: true, level: sound, ...turnContext(leaf, toTurned, motion) });
     await tween(time, ease, (e) => renderHard(leaf, from + (to - from) * e));
   } else {
     const cy = leaf.pose?.cy ?? H;
@@ -487,7 +510,15 @@ async function animateLeaf(leaf, toTurned, { duration, ease = easeInOut, priorit
     const lift = H * .14 * (cy === 0 ? -1 : 1);
     const share = Math.abs(endX - start.x) / (2 * W);
     const time = duration ?? 850 * Math.max(.35, share);
-    window.BookSound?.turn({ duration: time / 1000, level: sound, lifted: fresh });
+    window.BookSound?.turn({
+      duration: time / 1000, level: sound, lifted: fresh,
+      ...turnContext(leaf, toTurned, {
+        // Page widths per second, normalised: a button turn is ~0.65, a flick ~1.
+        pace: clamp((2 * share) / (time / 1000) / 3.5, .15, 1),
+        curve: ease === easeOut ? "out" : "inout",
+        ...motion,
+      }),
+    });
     await tween(time, ease, (e) => {
       const arc = fresh ? Math.sin(Math.PI * e) * lift : 0;
       renderFold(leaf, { x: start.x + (endX - start.x) * e, y: start.y + (cy - start.y) * e - arc }, cy);
@@ -757,7 +788,12 @@ book.addEventListener("pointermove", (event) => {
     Object.assign(drag, { started: true, forward, leaf, cy: drag.start.y < state.H / 2 ? 0 : state.H });
     beginFlight(leaf, 0);
     state.busy += 1;
-    window.BookSound?.dragStart(leaf.hard);
+    leaf.grab = {
+      corner: drag.cy === 0 ? "top" : "bottom",
+      y: clamp(drag.start.y / state.H, 0, 1),
+      bend: .2,
+    };
+    window.BookSound?.dragStart({ hard: leaf.hard, ...turnContext(leaf, forward) });
     try { book.setPointerCapture(event.pointerId); } catch { /* optional */ }
   }
   drag.samples.push({ x: event.clientX, t: event.timeStamp });
@@ -766,7 +802,13 @@ book.addEventListener("pointermove", (event) => {
   if (recent.length > 1) {
     // The rustle follows how fast the page is moving.
     const span = recent[recent.length - 1].t - recent[0].t;
-    window.BookSound?.dragMove((recent[recent.length - 1].x - recent[0].x) / Math.max(8, span));
+    // Bend grows as the corner is lifted away from its edge.
+    const grab = drag.leaf.grab;
+    if (grab) grab.bend = clamp(.2 + Math.abs(event.clientY - drag.y0) / (state.H * .35), .2, 1);
+    window.BookSound?.dragMove({
+      speed: (recent[recent.length - 1].x - recent[0].x) / Math.max(8, span),
+      bend: grab?.bend ?? .3,
+    });
   }
   const { W } = state;
   const { leaf, forward } = drag;
@@ -810,7 +852,11 @@ async function endDrag(event, cancelled) {
   updateChrome();
   window.BookSound?.dragEnd();
   // A page let go early falls back with a softer sound.
-  await animateLeaf(leaf, toTurned, { ease: easeOut, priority: 0, sound: complete ? .8 : .4 });
+  await animateLeaf(leaf, toTurned, {
+    ease: easeOut, priority: 0, sound: complete ? .85 : .5,
+    motion: { pace: clamp(Math.abs(velocity) / 1.4, .25, 1), snapBack: !complete },
+  });
+  leaf.grab = null;
   settle();
 }
 
