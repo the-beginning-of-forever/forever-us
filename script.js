@@ -469,7 +469,7 @@ function endFlight(leaf, turned) {
   from its current pose (e.g. where a drag was released). Soft pages travel
   along a gentle arc so the corner lifts as it crosses the spine.
 */
-async function animateLeaf(leaf, toTurned, { duration, ease = easeInOut, priority = 0 } = {}) {
+async function animateLeaf(leaf, toTurned, { duration, ease = easeInOut, priority = 0, sound = 1 } = {}) {
   state.busy += 1;
   beginFlight(leaf, priority);
   const { W, H } = state;
@@ -477,6 +477,7 @@ async function animateLeaf(leaf, toTurned, { duration, ease = easeInOut, priorit
     const from = leaf.pose?.t ?? (leaf.turned ? 1 : 0);
     const to = toTurned ? 1 : 0;
     const time = duration ?? 1050 * Math.max(.35, Math.abs(to - from));
+    window.BookSound?.turn({ duration: time / 1000, hard: true, level: sound });
     await tween(time, ease, (e) => renderHard(leaf, from + (to - from) * e));
   } else {
     const cy = leaf.pose?.cy ?? H;
@@ -486,6 +487,7 @@ async function animateLeaf(leaf, toTurned, { duration, ease = easeInOut, priorit
     const lift = H * .14 * (cy === 0 ? -1 : 1);
     const share = Math.abs(endX - start.x) / (2 * W);
     const time = duration ?? 850 * Math.max(.35, share);
+    window.BookSound?.turn({ duration: time / 1000, level: sound, lifted: fresh });
     await tween(time, ease, (e) => {
       const arc = fresh ? Math.sin(Math.PI * e) * lift : 0;
       renderFold(leaf, { x: start.x + (endX - start.x) * e, y: start.y + (cy - start.y) * e - arc }, cy);
@@ -616,6 +618,7 @@ async function turnTo(target) {
   if (reduceMotion.matches) {
     order.forEach((i) => setRest(state.leaves[i], forward));
     book.animate([{ opacity: .55 }, { opacity: 1 }], { duration: 200, easing: "ease-out" });
+    window.BookSound?.turn({ duration: .25, level: .5 });
     settle();
     return;
   }
@@ -631,6 +634,7 @@ async function turnTo(target) {
     duration: riffle ? (state.leaves[i].hard ? 800 : 620) : undefined,
     priority: order.length - n,
     ease: easeInOut,
+    sound: riffle ? .55 : 1,
   }).then(() => { state.leaves[i].pending = false; }))));
   settle();
 }
@@ -706,6 +710,7 @@ function setPeel(direction) {
   const lift = Math.min(70, state.W * .14);
   if (leaf.hard) renderHard(leaf, direction > 0 ? .035 : .965);
   else renderFold(leaf, { x: direction > 0 ? state.W - lift : -state.W + lift, y: state.H - lift * .7 }, state.H);
+  window.BookSound?.peel();
 }
 
 // A drag may start anywhere, even on a link (the contents page is mostly
@@ -752,10 +757,17 @@ book.addEventListener("pointermove", (event) => {
     Object.assign(drag, { started: true, forward, leaf, cy: drag.start.y < state.H / 2 ? 0 : state.H });
     beginFlight(leaf, 0);
     state.busy += 1;
+    window.BookSound?.dragStart(leaf.hard);
     try { book.setPointerCapture(event.pointerId); } catch { /* optional */ }
   }
   drag.samples.push({ x: event.clientX, t: event.timeStamp });
   if (drag.samples.length > 6) drag.samples.shift();
+  const recent = drag.samples.slice(-3);
+  if (recent.length > 1) {
+    // The rustle follows how fast the page is moving.
+    const span = recent[recent.length - 1].t - recent[0].t;
+    window.BookSound?.dragMove((recent[recent.length - 1].x - recent[0].x) / Math.max(8, span));
+  }
   const { W } = state;
   const { leaf, forward } = drag;
   if (leaf.hard) {
@@ -796,13 +808,34 @@ async function endDrag(event, cancelled) {
   state.busy -= 1;
   if (complete) state.k += forward ? 1 : -1;
   updateChrome();
-  await animateLeaf(leaf, toTurned, { ease: easeOut, priority: 0 });
+  window.BookSound?.dragEnd();
+  // A page let go early falls back with a softer sound.
+  await animateLeaf(leaf, toTurned, { ease: easeOut, priority: 0, sound: complete ? .8 : .4 });
   settle();
 }
 
 book.addEventListener("pointerup", (event) => endDrag(event, false));
 book.addEventListener("pointercancel", (event) => endDrag(event, true));
 book.addEventListener("pointerleave", (event) => { if (event.pointerType === "mouse" && !drag) setPeel(0); });
+
+/* Sound toggle ------------------------------------------------------------- */
+
+const soundButton = document.getElementById("book-sound");
+function syncSoundButton() {
+  const on = !window.BookSound?.muted;
+  soundButton.setAttribute("aria-pressed", String(on));
+  soundButton.setAttribute("aria-label", on ? "Sound on. Turn page sounds off" : "Sound off. Turn page sounds on");
+  soundButton.classList.toggle("is-muted", !on);
+}
+if (soundButton && window.BookSound) {
+  soundButton.hidden = false;
+  syncSoundButton();
+  soundButton.addEventListener("click", () => {
+    window.BookSound.unlock();
+    window.BookSound.setMuted(!window.BookSound.muted);
+    syncSoundButton();
+  });
+}
 
 /* Fullscreen --------------------------------------------------------------- */
 

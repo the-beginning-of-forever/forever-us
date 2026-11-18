@@ -10,8 +10,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./style.css?v=40">
-    <script src="./script.js?v=40" defer></script>
+    <link rel="stylesheet" href="./style.css?v=41">
+    <script src="./book-sound.js?v=41" defer></script>
+    <script src="./script.js?v=41" defer></script>
   </head>
   <body class="reader">
     <main class="desk" id="desk">
@@ -30,6 +31,9 @@
       </button>
       <button class="control control--next" id="book-next" type="button" aria-label="Next page">
         <span class="control-label">Next</span><span aria-hidden="true">›</span>
+      </button>
+      <button class="control control--sound" id="book-sound" type="button" aria-pressed="true" aria-label="Turn page sounds off" hidden>
+        <span class="sound-icon" aria-hidden="true">♪</span>
       </button>
       <button class="control control--fullscreen" id="book-fullscreen" type="button" aria-label="Toggle fullscreen" hidden>
         <span aria-hidden="true">⤢</span>

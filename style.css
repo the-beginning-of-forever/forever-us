@@ -572,14 +572,29 @@ blockquote {
 .control:disabled { opacity: .3; cursor: default; }
 .control span[aria-hidden="true"] { font-size: 1.35em; line-height: .8; }
 .control--contents { width: 12.5rem; border-color: transparent; background: transparent; font-variant-numeric: oldstyle-nums; color: rgba(243, 235, 221, .7); }
-.control--fullscreen { padding: 0; width: 48px; }
+.control--fullscreen,
+.control--sound { padding: 0; width: 48px; }
+.sound-icon { position: relative; font-size: 1.2em; line-height: 1; }
+/* Muted: a fine diagonal stroke through the note. */
+.control--sound.is-muted { color: rgba(243, 235, 221, .45); }
+.control--sound.is-muted .sound-icon::after {
+  position: absolute;
+  top: 50%;
+  left: -.25em;
+  right: -.25em;
+  height: 1.5px;
+  background: currentColor;
+  content: "";
+  transform: rotate(-45deg);
+}
 
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 .page :focus-visible { outline-color: var(--accent); }
 
 @media (max-width: 600px) {
   .book-controls { justify-content: space-between; }
-  .control--prev, .control--next { min-width: 6.2rem; }
+  .control--prev, .control--next { min-width: 5.4rem; padding: 0 .9rem; }
+  .control--sound { width: 44px; min-width: 44px; }
   .control--contents { width: auto; min-width: 0; flex: 1; padding: 0 .3rem; font-size: .92rem; }
   .control--fullscreen { display: none; }
 }
