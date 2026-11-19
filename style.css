@@ -32,6 +32,7 @@
   --cloth: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6 .9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23c)'/%3E%3C/svg%3E");
 
   /* Defaults until script.js measures the viewport. */
+  --ls: .74;        /* how small the book gets inside the locker */
   --page-w: 420px;
   --page-h: 630px;
   --fs: 18px;
@@ -707,3 +708,171 @@ blockquote {
 @media (prefers-reduced-motion: reduce) {
   .book, .book::before, .book-edge { transition: none !important; }
 }
+
+/* 9. The locker ------------------------------------------------------------
+   After the last page the closed book shrinks back into a velvet-lined
+   locker, the door swings shut and the heart lock clicks. script.js steps
+   through body.locker-shown -> locker-shut -> locker-locked.               */
+.desk > .book, .desk > .locker, .desk > .locker-back { grid-area: 1 / 1; }
+.desk > .book { z-index: 1; }
+.book { transition: transform .9s cubic-bezier(.45, .05, .25, 1), scale .9s cubic-bezier(.45, .05, .25, 1), filter .9s ease; }
+.book.no-motion, .book.no-motion::before { transition: none !important; }
+
+.locker, .locker-back {
+  --lf: calc(var(--page-w) * .055);           /* frame thickness */
+  --gap: calc(var(--page-w) * .035);
+  width: calc((var(--page-w) + var(--ov) * 2) * var(--ls) + var(--gap) * 2 + var(--lf) * 2);
+  height: calc((var(--page-h) + var(--ov) * 2) * var(--ls) + var(--gap) * 2 + var(--lf) * 2);
+  border-radius: calc(var(--lf) * .5);
+  opacity: 0;
+  visibility: hidden;
+  scale: 1.14;
+  pointer-events: none;
+  transition: opacity .7s ease, scale .9s cubic-bezier(.45, .05, .25, 1), visibility 0s linear .9s;
+}
+
+/* The cabinet and its velvet interior sit behind the book. */
+.locker-back {
+  z-index: 0;
+  border: var(--lf) solid;
+  border-color: #5e4537 #3b2b22 #2c2019 #4b372c;
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 40%, #6e2a31 0%, #47181d 65%, #2c0e12 100%);
+  box-shadow:
+    0 34px 70px rgba(0, 0, 0, .6),
+    0 10px 22px rgba(0, 0, 0, .4),
+    inset 0 0 calc(var(--page-w) * .09) rgba(0, 0, 0, .8);
+}
+.locker-back::before {                         /* fine velvet texture */
+  position: absolute;
+  inset: 0;
+  background: var(--grain);
+  opacity: .35;
+  mix-blend-mode: soft-light;
+  content: "";
+}
+
+/* The door hangs in the opening, in front of the book. */
+.locker {
+  position: relative;
+  z-index: 2;
+  border: var(--lf) solid transparent;
+  perspective: calc(var(--page-w) * 4);
+}
+.locker-door {
+  position: absolute;
+  inset: -1px;
+  transform-origin: 0 50%;
+  transform-style: preserve-3d;
+  transform: rotateY(-112deg);
+  transition: transform .9s cubic-bezier(.2, .7, .3, 1);
+}
+.locker-door-front, .locker-door-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 3px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.locker-door-front {
+  background:
+    linear-gradient(125deg, rgba(255, 240, 215, .1), rgba(255, 240, 215, 0) 38%),
+    var(--cloth),
+    linear-gradient(180deg, #5b4134, #3f2c23);
+  box-shadow: inset 0 0 0 1px rgba(255, 230, 190, .08), inset 0 -10px 24px rgba(0, 0, 0, .25);
+}
+.locker-door-front::before {                   /* gold inlay */
+  position: absolute;
+  inset: 7%;
+  border: 1px solid rgba(194, 164, 108, .55);
+  border-radius: 4px;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, .12), inset 0 0 0 3px rgba(0, 0, 0, .1);
+  content: "";
+}
+.locker-door-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(180deg, #3d2b22, #2a1d17);
+  box-shadow: inset 0 0 0 calc(var(--page-w) * .02) rgba(194, 164, 108, .18);
+}
+.locker-engraving {
+  position: absolute;
+  top: 24%;
+  left: 0;
+  right: 0;
+  color: var(--gold);
+  font: italic 500 calc(var(--page-w) * .075) / 1 var(--display);
+  letter-spacing: .04em;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .5), 0 -1px 0 rgba(255, 230, 180, .15);
+}
+.locker-lock {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(var(--page-w) * .13);
+  translate: -50% -42%;
+  overflow: visible;
+  color: #cdae70;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .45));
+}
+.locker-shackle { transform-box: fill-box; translate: 0 -32%; transition: translate .22s cubic-bezier(.6, 0, .9, .5); }
+.locker-handle {
+  position: absolute;
+  top: 50%;
+  right: 4.2%;
+  width: calc(var(--page-w) * .022);
+  height: 16%;
+  translate: 0 -50%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #8f6f3e, #e2c78e 45%, #8f6f3e);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, .45);
+}
+.locker-hinge {
+  position: absolute;
+  left: -2px;
+  width: calc(var(--page-w) * .018);
+  height: 9%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #6e5530, #c9ab70, #6e5530);
+}
+.locker-hinge--top { top: 12%; }
+.locker-hinge--bottom { bottom: 12%; }
+
+.locker-note {
+  position: absolute;
+  top: calc(100% + var(--lf) + 14px);
+  left: 50%;
+  display: grid;
+  justify-items: center;
+  gap: .7rem;
+  width: max-content;
+  max-width: min(92vw, 30rem);
+  translate: -50% 8px;
+  color: rgba(243, 235, 221, .86);
+  font: italic 500 calc(var(--fs) * 1.05) / 1.35 var(--display);
+  text-align: center;
+  opacity: 0;
+  transition: opacity .6s ease, translate .6s ease;
+}
+.locker-note p { margin: 0; }
+.locker-note .heart { color: #c66a60; font-style: normal; }
+.locker-open { font-style: normal; }
+
+/* Stage 1: the locker appears and the book sinks into it. */
+.locker-shown .locker, .locker-shown .locker-back { opacity: 1; visibility: visible; scale: 1; transition-delay: 0s; }
+.locker-shown .book { scale: var(--ls); filter: brightness(.82); }
+.desk { transition: translate .9s cubic-bezier(.45, .05, .25, 1); }
+/* Lift everything a little so the note under the locker fits on screen. */
+.locker-shown .desk { translate: 0 calc(var(--controls-h) / 2 - 3.6rem); }
+.locker-shown .book-controls { opacity: 0; pointer-events: none; }
+.book-controls { transition: opacity .5s ease; }
+/* Stage 2: the door swings shut. */
+.locker-shut .locker-door { transform: rotateY(0deg); transition: transform .75s cubic-bezier(.55, 0, .85, .35); }
+/* Stage 3: the lock clicks and the note appears. */
+.locker-locked .locker-shackle { translate: 0 0; }
+.locker-locked .locker-note { opacity: 1; translate: -50% 0; transition-delay: .35s; }
+.locker-locked .locker { pointer-events: auto; }
+/* Opening the page at the end, or reduced motion: no transitions. */
+.locker-instant .desk, .locker-instant .book, .locker-instant .book-controls, .locker-instant .locker,
+.locker-instant .locker-back, .locker-instant .locker-door, .locker-instant .locker-shackle,
+.locker-instant .locker-note { transition: none !important; }

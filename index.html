@@ -18,16 +18,39 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./style.css?v=57">
+    <link rel="stylesheet" href="./style.css?v=58">
     <script src="./sounds/recordings.js?v=48" defer></script>
     <script src="./book-sound.js?v=49" defer></script>
-    <script src="./script.js?v=55" defer></script>
+    <script src="./script.js?v=56" defer></script>
   </head>
   <body class="reader">
     <main class="desk" id="desk">
       <h1 class="visually-hidden">The Beginning of Forever</h1>
+      <div class="locker-back" aria-hidden="true"></div>
       <div class="book" id="book" aria-roledescription="book" aria-label="The Beginning of Forever">
         <noscript><p class="noscript">This book needs JavaScript to turn its pages.</p></noscript>
+      </div>
+      <!-- After the last page the closed book is put away in this locker. -->
+      <div class="locker" id="locker" role="region" aria-label="Locker">
+        <div class="locker-door">
+          <div class="locker-door-front">
+            <span class="locker-hinge locker-hinge--top" aria-hidden="true"></span>
+            <span class="locker-hinge locker-hinge--bottom" aria-hidden="true"></span>
+            <span class="locker-engraving" aria-hidden="true">Our Forever</span>
+            <svg class="locker-lock" viewBox="0 0 24 31" aria-hidden="true">
+              <path class="locker-shackle" d="M7.6 13V8.2a4.4 4.4 0 0 1 8.8 0V13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+              <path d="M12 30s-8.6-5.1-10.6-10.3A5.6 5.6 0 0 1 12 15.4a5.6 5.6 0 0 1 10.6 4.3C20.6 24.9 12 30 12 30z" fill="currentColor"/>
+              <circle cx="12" cy="20.6" r="1.5" fill="#2b1d17"/>
+              <path d="M11.3 21.4h1.4l.5 3.2h-2.4z" fill="#2b1d17"/>
+            </svg>
+            <span class="locker-handle" aria-hidden="true"></span>
+          </div>
+          <div class="locker-door-back" aria-hidden="true"></div>
+        </div>
+        <div class="locker-note">
+          <p>Precious things ni locker lo pedatham kadha… andhuke mana book ikkada. <span class="heart" aria-hidden="true">♥</span></p>
+          <button class="control locker-open" id="locker-open" type="button">Open the locker</button>
+        </div>
       </div>
     </main>
 

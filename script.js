@@ -19,6 +19,7 @@ const prevButton = document.getElementById("book-previous");
 const nextButton = document.getElementById("book-next");
 const contentsButton = document.getElementById("book-contents");
 const fullscreenButton = document.getElementById("book-fullscreen");
+const lockerOpenButton = document.getElementById("locker-open");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const coarsePointer = window.matchMedia("(pointer: coarse)");
 
@@ -609,6 +610,7 @@ function settle() {
   restack();
   updateChrome();
   rememberPosition();
+  if (state.k === maxK()) scheduleLocker(); else cancelLocker();
   if (state.queued && !state.busy) {
     const direction = state.queued;
     state.queued = 0;
@@ -636,7 +638,7 @@ function kForAnchor(rawAnchor) {
 // Jump to leaf position `target`. Neighbouring pages turn normally; longer
 // jumps riffle through the last few leaves so the reader sees the book move.
 async function turnTo(target) {
-  if (!state.ready) return;
+  if (!state.ready || locker.status !== "out") return;
   target = clamp(target, 0, maxK());
   if (target === state.k) return;
   if (state.busy) { state.queued = Math.sign(target - state.k); return; }
@@ -688,8 +690,110 @@ function go(direction) {
 
 function goToAnchor(anchor) {
   const target = kForAnchor(anchor);
-  if (target !== null) turnTo(target);
+  if (target === null) return;
+  if (locker.status !== "out" && target !== maxK()) releaseLocker();
+  turnTo(target);
 }
+
+/* The locker ---------------------------------------------------------------- */
+// When the book has been read to the end and closed, it is put away: it sinks
+// into a little velvet-lined locker, the door swings shut and the heart lock
+// clicks. "Open the locker" takes it out again, ready to read from the cover.
+// The look of each stage lives in style.css (body.locker-shown / -shut /
+// -locked); this only sequences the classes.
+const locker = { status: "out", timer: 0, token: 0 };
+const LOCKER_STAGES = ["locker-shown", "locker-shut", "locker-locked"];
+
+function setLockerStages(count, instant) {
+  const body = document.body;
+  if (instant) body.classList.add("locker-instant");
+  LOCKER_STAGES.forEach((name, index) => body.classList.toggle(name, index < count));
+  book.inert = count > 0;
+  if (instant) {
+    void book.offsetWidth;
+    requestAnimationFrame(() => requestAnimationFrame(() => body.classList.remove("locker-instant")));
+  }
+}
+
+function scheduleLocker() {
+  if (locker.status !== "out" || locker.timer) return;
+  locker.timer = window.setTimeout(() => {
+    locker.timer = 0;
+    if (state.k === maxK() && !state.busy && !drag) putAway();
+  }, 1100);
+}
+
+function cancelLocker() {
+  window.clearTimeout(locker.timer);
+  locker.timer = 0;
+}
+
+async function putAway() {
+  if (locker.status !== "out") return;
+  const token = ++locker.token;
+  locker.status = "going";
+  if (reduceMotion.matches) {
+    setLockerStages(3, true);
+  } else {
+    setLockerStages(1);
+    await wait(1000);
+    if (token !== locker.token) return;
+    setLockerStages(2);
+    await wait(720);
+    if (token !== locker.token) return;
+    window.BookSound?.turn({ hard: true, duration: .3, level: .6 });
+    await wait(380);
+    if (token !== locker.token) return;
+    setLockerStages(3);
+  }
+  locker.status = "in";
+  lockerOpenButton?.focus({ preventScroll: true });
+}
+
+// Turn the book back over to its front cover without any visible motion.
+function closeToCover() {
+  book.classList.add("no-motion");
+  state.leaves.forEach((leaf) => setRest(leaf, false));
+  state.k = 0;
+  restack();
+  updateChrome();
+  rememberPosition();
+  void book.offsetWidth;
+  book.classList.remove("no-motion");
+}
+
+async function takeOut() {
+  if (locker.status !== "in") return;
+  const token = ++locker.token;
+  locker.status = "coming";
+  if (reduceMotion.matches) {
+    closeToCover();
+    setLockerStages(0, true);
+  } else {
+    setLockerStages(2);
+    await wait(320);
+    if (token !== locker.token) return;
+    closeToCover();
+    window.BookSound?.turn({ hard: true, duration: .3, level: .45 });
+    setLockerStages(1);
+    await wait(900);
+    if (token !== locker.token) return;
+    setLockerStages(0);
+    await wait(900);
+    if (token !== locker.token) return;
+  }
+  locker.status = "out";
+  nextButton.focus({ preventScroll: true });
+}
+
+function releaseLocker() {
+  locker.token += 1;
+  cancelLocker();
+  setLockerStages(0, true);
+  locker.status = "out";
+}
+
+lockerOpenButton?.addEventListener("click", takeOut);
 
 prevButton.addEventListener("click", () => go(-1));
 nextButton.addEventListener("click", () => go(1));
@@ -1005,6 +1109,8 @@ function start() {
   layoutBook(window.location.hash);
   book.classList.add("is-ready");
   rememberPosition();
+  // Opened straight at the end: the book is already in its locker.
+  if (state.k === maxK()) { setLockerStages(3, true); locker.status = "in"; }
   // Pages are measured with the final fonts; re-measure if any arrive late.
   document.fonts?.addEventListener?.("loadingdone", () => { state.layoutKey = ""; relayout(); });
 }
@@ -1016,4 +1122,4 @@ if (document.fonts?.ready) {
 }
 
 // Small inspection hook for automated checks; has no effect on reading.
-window.bookReader = { state, turnTo, go, goToAnchor, kForAnchor };
+window.bookReader = { state, turnTo, go, goToAnchor, kForAnchor, locker };
