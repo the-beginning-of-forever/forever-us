@@ -880,3 +880,5 @@ blockquote {
 /* The same locker greets her when the book is first opened. */
 .locker-note-start, .locker-intro .locker-note-end { display: none; }
 .locker-intro .locker-note-start { display: block; }
+
+.proposal-lead { text-align: center; font-style: italic; color: var(--ink-soft); margin-bottom: .6em !important; }
