@@ -24,8 +24,8 @@ const coarsePointer = window.matchMedia("(pointer: coarse)");
 
 const BOOK_TITLE = "The Beginning of Forever";
 const LEGACY_HASHES = {
-  "page-1": "introduction", "page-2": "chapter-2", "page-3": "chapter-3",
-  "page-4": "chapter-4", "page-5": "one-little-question",
+  "page-1": "introduction", "page-2": "chapter-3", "page-3": "chapter-3",
+  "page-4": "letter-family", "page-5": "one-little-question",
 };
 
 const state = {
@@ -305,6 +305,8 @@ function buildBook(pages) {
       reverse.append(ghost);
       leaves.push(new Leaf(front, { kind: "reverse", el: reverse }, false));
     });
+    // Turning the last page closes the book onto its back cover.
+    leaves.push(new Leaf({ kind: "cover-back", el: boardFace("cover-back") }, { kind: "inside-back", el: boardFace("inside-back") }, true));
   }
 
   const crease = document.createElement("div");
@@ -560,7 +562,7 @@ function updateChrome() {
   });
 
   book.classList.toggle("is-closed-front", k === 0);
-  book.classList.toggle("is-closed-back", spread && k === leaves.length);
+  book.classList.toggle("is-closed-back", k === maxK());
 
   const softLeaves = leaves.filter((leaf) => !leaf.hard);
   const turnedSoft = softLeaves.filter((leaf) => leaf.turned).length;
@@ -671,9 +673,17 @@ async function turnTo(target) {
   settle();
 }
 
+// In a spread, an odd page count leaves the last page's reverse blank. That
+// empty opening is skipped: turning the final page closes the book.
+function isBlankEnd(k) {
+  return state.mode === "spread" && k === state.leaves.length - 1 && state.leaves[k - 1]?.back.kind === "blank";
+}
+
 function go(direction) {
   if (direction > 0 && state.k === 0) requestReaderFullscreen();
-  turnTo(state.k + direction);
+  let target = state.k + direction;
+  if (isBlankEnd(target)) target += direction;
+  turnTo(target);
 }
 
 function goToAnchor(anchor) {
@@ -864,6 +874,7 @@ async function endDrag(event, cancelled) {
   });
   leaf.grab = null;
   settle();
+  if (complete && isBlankEnd(state.k)) turnTo(state.k + (forward ? 1 : -1));
 }
 
 book.addEventListener("pointerup", (event) => endDrag(event, false));

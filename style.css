@@ -322,6 +322,21 @@ html, body { height: 100%; margin: 0; }
 .verse--left { text-align: left; font-size: 1em; }
 .aside { text-align: center; color: var(--ink-soft); font-style: italic; font-size: .92em; }
 .aside--end { margin-top: 1.2em !important; }
+.verse--end { margin: 1.4em 0 0; }
+.salutation--soft { margin-bottom: .3em !important; }
+.rule-item { padding-left: 1.4em; text-indent: -1.4em; margin-bottom: .35em !important; }
+.rule-num { display: inline-block; width: 1.4em; text-indent: 0; color: var(--gold-deep); font-variant-numeric: oldstyle-nums; }
+
+/* Small handwritten-style asides inside the letter */
+.note {
+  margin: 1.3em 0 .4em !important;
+  padding-left: .9em;
+  border-left: 1px dashed rgba(194, 164, 108, .85);
+  color: var(--ink-soft);
+  font-style: italic;
+  font-size: .9em;
+}
+.opener + .note, .promise-intro + .note { margin-top: 0 !important; margin-bottom: 1.4em !important; }
 
 .sub-title {
   margin: 1.1em 0 .55em;
@@ -380,6 +395,10 @@ html, body { height: 100%; margin: 0; }
 .promise-quote--caps { font-style: normal; font-size: .84em; letter-spacing: .07em; }
 .promise-link { color: var(--accent); font-size: .82em; text-decoration: underline; text-decoration-color: rgba(138, 76, 69, .35); text-underline-offset: .2em; }
 .promise-link:hover { text-decoration-color: currentColor; }
+.promise-intro { margin: 0 0 1.4em !important; }
+.promise-smile { color: var(--ink-soft); font-style: italic; }
+.promise-number:not(.promise-number--first) { margin-top: 1.5em !important; padding-top: 1.3em; border-top: 1px solid var(--ink-faint); }
+.page-text > .promise-number:first-child { margin-top: 0 !important; padding-top: 0; border-top: 0; }
 
 /* The letter */
 .part-title {
@@ -688,3 +707,134 @@ blockquote {
 @media (prefers-reduced-motion: reduce) {
   .book, .book::before, .book-edge { transition: none !important; }
 }
+
+/* Handwritten interior ------------------------------------------------------
+   The hardcover stays printed; every page is written by hand, like a project
+   done with three pens and a highlighter:
+     black pen   - headings          blue pen - the writing itself
+     red pen     - labels, hearts, underlines and the big promises
+     highlighter - the lines that matter most                                */
+.page {
+  --pen-blue: #1f3d8f;
+  --pen-blue-soft: #3c5aa6;
+  --pen-black: #1d1b1a;
+  --pen-red: #c3272b;
+  --hl: 255, 222, 74;
+  --ink: var(--pen-blue);
+  --ink-soft: var(--pen-blue-soft);
+  --ink-faint: rgba(31, 61, 143, .22);
+  --accent: var(--pen-red);
+  --gold-deep: var(--pen-red);
+  --serif: "Caveat", "Bradley Hand", "Segoe Print", cursive;
+  --display: "Caveat", "Bradley Hand", "Segoe Print", cursive;
+  --squiggle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 12' preserveAspectRatio='none'%3E%3Cpath d='M3 7.5C40 4 70 9.5 110 6.5S190 3.5 230 6.8 285 5 297 6' fill='none' stroke='%23c3272b' stroke-width='2.1' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+  --swash: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 16' preserveAspectRatio='none'%3E%3Cpath d='M6 9C60 4 120 12 180 7S260 5 294 8' fill='none' stroke='%23c3272b' stroke-width='2.2' stroke-linecap='round' vector-effect='non-scaling-stroke'/%3E%3Cpath d='M40 12.5C100 9.5 170 13.5 250 10.5' fill='none' stroke='%23c3272b' stroke-width='1.4' stroke-linecap='round' opacity='.75' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+  --pen-line: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 6' preserveAspectRatio='none'%3E%3Cpath d='M2 3.4C80 2.2 150 4.2 220 3S280 2.8 298 3.6' fill='none' stroke='%231f3d8f' stroke-width='1.1' stroke-linecap='round' opacity='.45' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+  font-size: calc(var(--fs) * 1.2);
+  font-weight: 500;
+  line-height: 1.42;
+  font-synthesis: none;
+  font-variant-ligatures: none;
+  text-shadow: 0 0 .6px rgba(31, 61, 143, .35);   /* a touch of ink bleed */
+}
+.page p { margin-bottom: .55em; }
+.page em { font-style: normal; }
+.page-head { visibility: hidden; }                 /* no printed running heads */
+.page-folio { font-size: calc(var(--fs) * .95); color: var(--pen-blue-soft); }
+
+/* Lines written by hand are never perfectly straight. */
+.page .page-text > p { padding-right: .15em; }
+.page .page-text > p:nth-child(4n+1) { transform: rotate(-.18deg); }
+.page .page-text > p:nth-child(4n+2) { transform: rotate(.12deg); }
+.page .page-text > p:nth-child(4n+3) { transform: rotate(-.08deg); }
+.page .page-text > p:nth-child(4n)   { transform: rotate(.16deg); }
+
+/* Black pen: headings */
+.page :is(.opener-title, .promise-title, .part-title, .sub-title, .salutation, .salutation strong, .toc-title, .standalone-title, .proposal-question, .signoff, .signoff strong) {
+  color: var(--pen-black);
+  text-shadow: 0 0 .6px rgba(29, 27, 26, .4);
+  letter-spacing: 0;
+}
+.page :is(.opener-title, .standalone-title) { font-size: calc(var(--fs) * 2.1); font-weight: 700; line-height: 1.05; }
+.page .part-title { font-size: calc(var(--fs) * 1.75); font-weight: 700; }
+.page .promise-title { font-size: calc(var(--fs) * 1.6); font-weight: 700; }
+.page .sub-title { font-size: calc(var(--fs) * 1.45); font-weight: 600; font-style: normal; }
+.page .salutation { font-size: 1.12em; font-weight: 600; font-style: normal; }
+.page .signoff { font-size: 1.35em; font-weight: 600; font-style: normal; }
+.page .proposal-question { font-weight: 700; }
+
+/* Red pen: labels, numbers, hearts */
+.page :is(.opener-label, .promise-number, .toc-label, .most-important, .most-important strong, .part-numeral) {
+  color: var(--pen-red);
+  text-shadow: 0 0 .6px rgba(195, 39, 43, .35);
+  letter-spacing: .04em;
+  text-transform: none;
+  font-weight: 600;
+}
+.page .opener-label { font-size: .95em; }
+.page .promise-number { font-size: .9em; }
+.page .part-numeral { font-size: .7em; letter-spacing: .1em; }
+.page .heart, .page .heart-item::before { color: var(--pen-red); }
+.page .dropcap::first-letter { color: var(--pen-red); font: 700 2.6em / .8 var(--display); margin-right: .06em; }
+
+/* Hand-drawn red underline in place of the printed ornaments */
+.page .rule { height: .7em; width: 58%; margin-top: .25em; background: var(--swash) center / 100% 100% no-repeat; }
+.page .rule > * { display: none; }
+.page .rule--small { width: 30%; height: .55em; background-image: var(--squiggle); }
+
+/* Blue pen, lighter pressure: asides and quiet lines */
+.page :is(.aside, .dedication, .opener-subtitle, .closing-note, .promise-smile, .proposal-footer, .so) { color: var(--pen-blue-soft); font-style: normal; }
+.page .opener-subtitle { font-size: 1.1em; }
+
+/* Red-pen underline for the key promise lines */
+.page :is(.promise-line, .ul-red) {
+  color: inherit;
+  font-weight: 600;
+  padding-bottom: .12em;
+  background: var(--squiggle) left bottom / 100% .42em no-repeat;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.page .vow, .page .vow em, .page .promise-quote--caps {
+  color: var(--pen-red);
+  text-shadow: 0 0 .6px rgba(195, 39, 43, .4);
+  font-size: 1.12em;
+  font-weight: 700;
+  letter-spacing: .03em;
+}
+.page .vow em { background: none; padding: 0; font-size: 1em; }
+
+/* Yellow highlighter */
+.page mark,
+.page p:not(.salutation, .signoff, .most-important) > strong:not(.promise-line) {
+  color: inherit;
+  font-weight: 600;
+  margin: 0 -.15em;
+  padding: .04em .2em .02em;
+  border-radius: .7em .25em .6em .3em / .4em .7em .35em .6em;
+  background:
+    linear-gradient(100deg, rgba(var(--hl), 0) .6%, rgba(var(--hl), .72) 2.2%, rgba(var(--hl), .5) 6%, rgba(var(--hl), .42) 90%, rgba(var(--hl), .7) 96%, rgba(var(--hl), 0) 99%),
+    linear-gradient(182deg, rgba(var(--hl), 0) 0%, rgba(var(--hl), .28) 10%, rgba(var(--hl), 0) 18%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Pen lines instead of printed rules */
+.page .feature { border-left: 0; padding-left: .85em; background: linear-gradient(var(--pen-red), var(--pen-red)) left .25em / 2px calc(100% - .5em) no-repeat; font-style: normal; }
+.page blockquote { border-left: 0; padding-left: .9em; background: linear-gradient(var(--pen-blue-soft), var(--pen-blue-soft)) left .2em / 1.5px calc(100% - .4em) no-repeat; font-style: normal; }
+.page .note { border-left: 0; padding-left: .2em; color: var(--pen-black); font-size: 1em; font-style: normal; transform: rotate(-.6deg) !important; }
+.page .promise-number:not(.promise-number--first) { border-top: 0; background: var(--pen-line) top / 100% 6px no-repeat; }
+.page .page-text > .promise-number:first-child { background: none; }
+.page .toc-title::after { border-bottom: 1.5px dotted rgba(31, 61, 143, .45); }
+.page .toc-page { color: var(--pen-blue); font-variant-numeric: normal; }
+.page .toc { line-height: 1.12; font-size: .9em; }
+.page .opener--compact { margin-bottom: .5em; }
+.page .toc-entry { padding: .08em 0; }
+.page .toc-entry--sub { padding: 0 0 0 1.4em; font-size: .9em; }
+.page .toc-entry--sub .toc-title { font: 500 1em / 1.2 var(--serif); color: var(--pen-blue); }
+.page .toc-label { line-height: 1.2; font-size: .8em; }
+.page .proposal-item { font-style: normal; }
+.page .finale-text { font-style: normal; }
+.page .finale-line { color: var(--pen-red); font-weight: 700; }
+.page .letter-intro { margin: 0 0 1em !important; }
+.page .letter-intro + .note { margin-top: 0 !important; }
