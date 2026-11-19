@@ -876,3 +876,7 @@ blockquote {
 .locker-instant .desk, .locker-instant .book, .locker-instant .book-controls, .locker-instant .locker,
 .locker-instant .locker-back, .locker-instant .locker-door, .locker-instant .locker-shackle,
 .locker-instant .locker-note { transition: none !important; }
+
+/* The same locker greets her when the book is first opened. */
+.locker-note-start, .locker-intro .locker-note-end { display: none; }
+.locker-intro .locker-note-start { display: block; }

@@ -732,6 +732,7 @@ async function putAway() {
   if (locker.status !== "out") return;
   const token = ++locker.token;
   locker.status = "going";
+  document.body.classList.remove("locker-intro");
   if (reduceMotion.matches) {
     setLockerStages(3, true);
   } else {
@@ -783,6 +784,7 @@ async function takeOut() {
     if (token !== locker.token) return;
   }
   locker.status = "out";
+  document.body.classList.remove("locker-intro");
   nextButton.focus({ preventScroll: true });
 }
 
@@ -1110,7 +1112,12 @@ function start() {
   book.classList.add("is-ready");
   rememberPosition();
   // Opened straight at the end: the book is already in its locker.
-  if (state.k === maxK()) { setLockerStages(3, true); locker.status = "in"; }
+  // Opened at the start: the book waits in its locker until she opens it.
+  if (state.k === maxK() || state.k === 0) {
+    document.body.classList.toggle("locker-intro", state.k === 0);
+    setLockerStages(3, true);
+    locker.status = "in";
+  }
   // Pages are measured with the final fonts; re-measure if any arrive late.
   document.fonts?.addEventListener?.("loadingdone", () => { state.layoutKey = ""; relayout(); });
 }
