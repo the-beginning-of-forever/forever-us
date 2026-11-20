@@ -27,7 +27,7 @@
   --desk: #1b1612;
   --serif: "EB Garamond", "Garamond", "Iowan Old Style", Georgia, serif;
   --display: "Cormorant Garamond", "EB Garamond", Georgia, serif;
-  --controls-h: calc(64px + env(safe-area-inset-bottom, 0px));
+  --controls-h: calc(52px + env(safe-area-inset-bottom, 0px));
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .27 0 0 0 0 .18 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
   --cloth: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6 .9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23c)'/%3E%3C/svg%3E");
 
@@ -593,9 +593,13 @@ blockquote {
 .control:hover:not(:disabled) { background: rgba(243, 235, 221, .11); border-color: rgba(243, 235, 221, .3); }
 .control:disabled { opacity: .3; cursor: default; }
 .control span[aria-hidden="true"] { font-size: 1.35em; line-height: .8; }
-.control--contents { width: 12.5rem; border-color: transparent; background: transparent; font-variant-numeric: oldstyle-nums; color: rgba(243, 235, 221, .7); }
-.control--fullscreen,
-.control--sound { padding: 0; width: 48px; }
+/* Quiet round icons: help, sound, full screen. */
+.control--icon, .control--fullscreen, .control--sound {
+  width: 40px; min-width: 40px; min-height: 40px; padding: 0;
+  border-color: rgba(243, 235, 221, .1); background: transparent;
+  color: rgba(243, 235, 221, .55); font-size: .95rem;
+}
+.control--icon span[aria-hidden="true"] { font-size: 1.05em; }
 .sound-icon { position: relative; font-size: 1.2em; line-height: 1; }
 /* Muted: a fine diagonal stroke through the note. */
 .control--sound.is-muted { color: rgba(243, 235, 221, .45); }
@@ -614,13 +618,8 @@ blockquote {
 .page :focus-visible { outline-color: var(--accent); }
 
 @media (max-width: 600px) {
-  .book-controls { justify-content: space-between; }
-  .control--prev, .control--next { min-width: 5.4rem; padding: 0 .9rem; }
-  .control--sound { width: 44px; min-width: 44px; }
-  .control--contents { width: auto; min-width: 0; flex: 1; padding: 0 .3rem; font-size: .92rem; }
   .control--fullscreen { display: none; }
-  .is-iphone-safari .control--fullscreen { display: inline-flex; width: 44px; min-width: 44px; }
-  .is-iphone-safari .control--prev, .is-iphone-safari .control--next { min-width: 4.6rem; padding: 0 .75rem; }
+  .is-iphone-safari .control--fullscreen { display: inline-flex; }
 }
 
 /* iPhone: how to read in full screen (Add to Home Screen). */
@@ -881,3 +880,95 @@ blockquote {
 .locker-intro .locker-note-start { display: block; }
 
 .proposal-lead { text-align: center; font-style: italic; color: var(--ink-soft); margin-bottom: .6em !important; }
+
+/* 10. Tutorial ---------------------------------------------------------- */
+.tutorial {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  display: grid;
+  place-items: center;
+  padding: max(16px, env(safe-area-inset-top, 0px)) 16px max(16px, env(safe-area-inset-bottom, 0px));
+  background: rgba(15, 11, 8, .6);
+  animation: tutorialIn .45s ease both;
+}
+@keyframes tutorialIn { from { opacity: 0; } }
+.tutorial-card {
+  width: min(23rem, 100%);
+  padding: 1.4rem 1.4rem 1.2rem;
+  border-radius: 4px;
+  background: var(--grain), var(--paper);
+  background-size: 160px 160px, auto;
+  background-blend-mode: soft-light, normal;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .55);
+  color: var(--ink);
+  font: 400 1rem / 1.5 var(--serif);
+}
+.tutorial-title { margin: .2rem 0 .7rem; color: #342b23; font: 600 1.45rem / 1.15 var(--display); text-align: center; }
+.tutorial-steps { margin: 0 0 1.1rem; padding: 0; list-style: none; }
+.tutorial-steps li { margin: 0 0 .55rem; padding-left: 1.2em; text-indent: -1.2em; }
+.tutorial-steps li::before { display: inline-block; width: 1.2em; text-indent: 0; color: var(--accent); content: "♡"; }
+.tutorial-steps strong { font-weight: 600; color: #342b23; }
+@media (hover: none), (pointer: coarse) { .tutorial-desktop { display: none; } }
+.tutorial-close {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--gold-deep);
+  border-radius: 3px;
+  background: #6d3b35;
+  color: var(--paper-hi);
+  font: 500 1rem / 1 var(--serif);
+  cursor: pointer;
+}
+.tutorial-close:hover { background: #7c4640; }
+
+/* A small page whose corner keeps turning under a finger. */
+.tutorial-demo { position: relative; width: 120px; height: 104px; margin: 0 auto .4rem; }
+.tutorial-sheet {
+  position: absolute;
+  inset: 4px 22px 14px;
+  overflow: hidden;
+  border-radius: 2px 4px 4px 2px;
+  background: linear-gradient(90deg, #e6dccb, var(--paper-hi) 14%, var(--paper));
+  box-shadow: 0 4px 10px rgba(40, 25, 12, .25), inset 0 0 0 1px rgba(64, 56, 47, .12);
+}
+.tutorial-sheet::before {                    /* lines of text */
+  position: absolute;
+  inset: 14px 10px 14px;
+  background: repeating-linear-gradient(transparent 0 7px, rgba(64, 56, 47, .18) 7px 8px);
+  content: "";
+}
+.tutorial-fold {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  background: linear-gradient(135deg, #d9ccb4 0%, #fbf7ef 48%, rgba(0, 0, 0, 0) 50%);
+  box-shadow: -2px -2px 6px rgba(40, 25, 12, .18);
+  animation: tutorialFold 2.6s ease-in-out infinite;
+}
+.tutorial-hand {
+  position: absolute;
+  right: 6px;
+  bottom: 0;
+  font-size: 26px;
+  line-height: 1;
+  animation: tutorialHand 2.6s ease-in-out infinite;
+}
+@keyframes tutorialFold {
+  0%, 12% { width: 0; height: 0; }
+  55%, 70% { width: 60px; height: 60px; }
+  100% { width: 0; height: 0; }
+}
+@keyframes tutorialHand {
+  0%, 12% { translate: 0 0; opacity: 0; }
+  20% { opacity: 1; }
+  55%, 70% { translate: -46px -38px; opacity: 1; }
+  90%, 100% { translate: -46px -38px; opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tutorial-fold { animation: none; width: 40px; height: 40px; }
+  .tutorial-hand { animation: none; translate: -30px -24px; }
+}

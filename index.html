@@ -18,10 +18,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./style.css?v=63">
+    <link rel="stylesheet" href="./style.css?v=64">
     <script src="./sounds/recordings.js?v=48" defer></script>
     <script src="./book-sound.js?v=49" defer></script>
-    <script src="./script.js?v=59" defer></script>
+    <script src="./script.js?v=60" defer></script>
   </head>
   <body class="reader">
     <main class="desk" id="desk">
@@ -55,15 +55,11 @@
       </div>
     </main>
 
-    <nav class="book-controls" id="book-controls" aria-label="Book navigation">
-      <button class="control control--prev" id="book-previous" type="button" aria-label="Previous page">
-        <span aria-hidden="true">‹</span><span class="control-label">Back</span>
-      </button>
-      <button class="control control--contents" id="book-contents" type="button" aria-label="Go to table of contents">
-        <span class="control-progress" id="book-progress" aria-live="polite">Cover</span>
-      </button>
-      <button class="control control--next" id="book-next" type="button" aria-label="Next page">
-        <span class="control-label">Next</span><span aria-hidden="true">›</span>
+    <!-- No page buttons: the pages turn like a real book (swipe, drag a
+         corner, or tap a page edge). Only quiet reading options stay here. -->
+    <nav class="book-controls" id="book-controls" aria-label="Reading options">
+      <button class="control control--icon" id="book-help" type="button" aria-label="How to turn the pages">
+        <span aria-hidden="true">?</span>
       </button>
       <button class="control control--sound" id="book-sound" type="button" aria-pressed="true" aria-label="Turn page sounds off" hidden>
         <span class="sound-icon" aria-hidden="true">♪</span>
@@ -72,6 +68,22 @@
         <span aria-hidden="true">⤢</span>
       </button>
     </nav>
+
+    <div class="tutorial" id="tutorial" role="dialog" aria-modal="true" aria-labelledby="tutorial-title" hidden>
+      <div class="tutorial-card">
+        <div class="tutorial-demo" aria-hidden="true">
+          <div class="tutorial-sheet"><span class="tutorial-fold"></span></div>
+          <span class="tutorial-hand">👆</span>
+        </div>
+        <h2 class="tutorial-title" id="tutorial-title">Ee book ela chadavali?</h2>
+        <ul class="tutorial-steps">
+          <li><strong>Next page:</strong> page ni right nunchi left ki swipe cheyyi — leda page right edge ni tap cheyyi.</li>
+          <li><strong>Previous page:</strong> left nunchi right ki swipe cheyyi — leda left edge ni tap cheyyi.</li>
+          <li class="tutorial-desktop"><strong>Computer lo:</strong> page corner ni pattukoni laagu, leda ← → keys vaadu.</li>
+        </ul>
+        <button class="tutorial-close" id="tutorial-close" type="button">Sare, chaduvutha&nbsp;♥</button>
+      </div>
+    </div>
 
     <div class="install-tip" id="install-tip" role="dialog" aria-modal="true" aria-labelledby="install-tip-title" hidden>
       <div class="install-tip-card">

@@ -14,10 +14,6 @@
 
 const book = document.getElementById("book");
 const content = document.getElementById("book-content");
-const progressLabel = document.getElementById("book-progress");
-const prevButton = document.getElementById("book-previous");
-const nextButton = document.getElementById("book-next");
-const contentsButton = document.getElementById("book-contents");
 const fullscreenButton = document.getElementById("book-fullscreen");
 const lockerOpenButton = document.getElementById("locker-open");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -579,16 +575,6 @@ function updateChrome() {
   state.edgeLeft.style.setProperty("--edge", edge(turnedSoft));
   state.edgeRight.style.setProperty("--edge", edge(softLeaves.length - turnedSoft - (spread ? 0 : 1)));
 
-  const visible = visiblePages();
-  const total = state.pages.length;
-  let label = "Cover";
-  const compact = window.innerWidth < 420;
-  if (visible.length === 2) label = `Pages ${visible[0].folio}–${visible[1].folio} of ${total}`;
-  else if (visible.length === 1) label = compact ? `${visible[0].folio} / ${total}` : `Page ${visible[0].folio} of ${total}`;
-  else if (k > 0) label = "The End";
-  progressLabel.textContent = label;
-  prevButton.disabled = k <= 0;
-  nextButton.disabled = k >= maxK();
 }
 
 function visiblePages() {
@@ -793,7 +779,7 @@ async function takeOut() {
   }
   locker.status = "out";
   document.body.classList.remove("locker-intro");
-  nextButton.focus({ preventScroll: true });
+  showTutorial();
 }
 
 function releaseLocker() {
@@ -805,11 +791,39 @@ function releaseLocker() {
 
 lockerOpenButton?.addEventListener("click", takeOut);
 
-prevButton.addEventListener("click", () => go(-1));
-nextButton.addEventListener("click", () => go(1));
-contentsButton.addEventListener("click", () => goToAnchor("contents"));
+/* Tutorial ------------------------------------------------------------------ */
+// There are no page buttons, so the first time the book comes out of its
+// locker a short card shows how to turn the pages. "?" shows it again.
+const tutorial = document.getElementById("tutorial");
+const tutorialClose = document.getElementById("tutorial-close");
+let tutorialReturnFocus = null;
+
+function showTutorial(force = false) {
+  if (!tutorial) return;
+  let seen = false;
+  try { seen = window.localStorage.getItem("book-tutorial") === "seen"; } catch { /* storage unavailable */ }
+  if (seen && !force) return;
+  tutorialReturnFocus = document.activeElement;
+  tutorial.hidden = false;
+  tutorialClose?.focus({ preventScroll: true });
+}
+
+function hideTutorial() {
+  if (!tutorial || tutorial.hidden) return;
+  tutorial.hidden = true;
+  try { window.localStorage.setItem("book-tutorial", "seen"); } catch { /* storage unavailable */ }
+  tutorialReturnFocus?.focus?.({ preventScroll: true });
+}
+
+tutorialClose?.addEventListener("click", hideTutorial);
+tutorial?.addEventListener("click", (event) => { if (event.target === tutorial) hideTutorial(); });
+document.getElementById("book-help")?.addEventListener("click", () => showTutorial(true));
 
 document.addEventListener("keydown", (event) => {
+  if (tutorial && !tutorial.hidden) {
+    if (event.key === "Escape" || event.key === "Enter") { event.preventDefault(); hideTutorial(); }
+    return;
+  }
   const tip = document.getElementById("install-tip");
   if (tip && !tip.hidden) {
     if (event.key === "Escape") { event.preventDefault(); tip.querySelector("button")?.click(); }
@@ -963,6 +977,11 @@ async function endDrag(event, cancelled) {
     if (zone) { peel = null; go(zone); }
     else if (state.k === 0 && point.x >= 0 && point.x <= state.W) go(1);
     else if (state.mode === "spread" && state.k === maxK() && point.x < 0) go(-1);
+    // Tapping near a page's outer edge turns it, like an e-reader.
+    else if (point.x > state.W * .72 && point.x <= state.W && point.y >= 0 && point.y <= state.H) go(1);
+    else if (state.k > 0 && point.y >= 0 && point.y <= state.H && (state.mode === "spread"
+      ? point.x < -state.W * .72 && point.x >= -state.W
+      : point.x >= 0 && point.x < state.W * .28)) go(-1);
     return;
   }
 
@@ -1125,6 +1144,8 @@ function start() {
     document.body.classList.toggle("locker-intro", state.k === 0);
     setLockerStages(3, true);
     locker.status = "in";
+  } else {
+    showTutorial();
   }
   // Pages are measured with the final fonts; re-measure if any arrive late.
   document.fonts?.addEventListener?.("loadingdone", () => { state.layoutKey = ""; relayout(); });
