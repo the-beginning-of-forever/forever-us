@@ -90,21 +90,29 @@ function applyLayout(layout) {
 const source = content.content.cloneNode(true);
 // The final page ("Our Story Continues") stays sealed until she says yes.
 // accepted.html records the answer, and its link also carries ?answer=yes.
-const answered = (() => {
+let answered = (() => {
   const fromLink = new URLSearchParams(window.location.search).get("answer") === "yes";
   try {
     if (fromLink) window.localStorage.setItem("book-answer", "yes");
     return fromLink || window.localStorage.getItem("book-answer") === "yes";
   } catch { return fromLink; }
 })();
-const sections = [...source.children].filter((node) => node.classList.contains("book-section")
-  && (answered || !node.hasAttribute("data-after-yes")));
+const allSections = [...source.children].filter((node) => node.classList.contains("book-section"));
+const sections = [];
+function chooseSections() {
+  sections.splice(0, sections.length, ...allSections.filter((node) => answered || !node.hasAttribute("data-after-yes")));
+}
+chooseSections();
 const coverFront = source.querySelector('[data-cover="front"]');
 const coverBack = source.querySelector('[data-cover="back"]');
 
-(function buildContents() {
-  const list = source.querySelector("[data-toc-list]");
-  if (!list) return;
+// The contents are rebuilt when the final page is unsealed, so the entries
+// sit just before a hidden placeholder that stays in place.
+const tocPlaceholder = source.querySelector("[data-toc-list]");
+if (tocPlaceholder) tocPlaceholder.hidden = true;
+let tocEntries = [];
+function buildContents() {
+  if (!tocPlaceholder) return;
   const entries = [];
   const entry = (id, title, label, sub) => {
     const link = document.createElement("a");
@@ -127,13 +135,17 @@ const coverBack = source.querySelector('[data-cover="back"]');
       entries.push(link);
     });
   }
-  list.replaceWith(...entries);
-})();
+  tocEntries.forEach((node) => node.remove());
+  tocEntries = entries;
+  tocPlaceholder.before(...entries);
+  entries.forEach((node) => { node.dataset.b = `b${blockCounter++}`; });
+}
 
 let blockCounter = 0;
-sections.forEach((section) => {
+allSections.forEach((section) => {
   [...section.children].forEach((block) => { block.dataset.b = `b${blockCounter++}`; });
 });
+buildContents();
 
 const measureHost = document.createElement("div");
 measureHost.className = "measure";
@@ -823,6 +835,59 @@ function releaseLocker() {
 
 lockerOpenButton?.addEventListener("click", takeOut);
 
+/* The answer pages -------------------------------------------------------- */
+// Yes and No open their page (accepted.html / no.html) over the book instead
+// of navigating away, so full screen stays on. If the page can't be fetched,
+// it opens normally.
+const answerView = document.createElement("div");
+answerView.className = "answer-view standalone";
+answerView.hidden = true;
+document.body.append(answerView);
+
+function unsealFinalPage() {
+  if (answered) return;
+  answered = true;
+  try { window.localStorage.setItem("book-answer", "yes"); } catch { /* storage unavailable */ }
+  chooseSections();
+  buildContents();
+  const anchor = currentAnchor();
+  state.layoutKey = "";
+  layoutBook(anchor);
+  rememberPosition();
+}
+
+async function showAnswer(kind) {
+  const url = new URL(`./${kind}.html`, window.location.href).href;
+  let main = null;
+  try {
+    const response = await fetch(url);
+    if (response.ok) main = new DOMParser().parseFromString(await response.text(), "text/html").querySelector("main");
+  } catch { /* offline or blocked */ }
+  if (!main) { window.location.assign(url); return; }
+  if (kind === "accepted") unsealFinalPage();
+  answerView.dataset.kind = kind;
+  answerView.replaceChildren(document.importNode(main, true));
+  answerView.hidden = false;
+  book.inert = true;
+  answerView.querySelector(".standalone-link")?.focus({ preventScroll: true });
+}
+
+function closeAnswer() {
+  if (answerView.hidden) return;
+  const kind = answerView.dataset.kind;
+  answerView.hidden = true;
+  answerView.replaceChildren();
+  book.inert = false;
+  // After yes, the next page of the book is the final page.
+  if (kind === "accepted") goToAnchor("our-story-continues");
+}
+
+answerView.addEventListener("click", (event) => {
+  if (!event.target.closest(".standalone-link")) return;
+  event.preventDefault();
+  closeAnswer();
+});
+
 /* Tutorial ------------------------------------------------------------------ */
 // There are no page buttons, so the first time the book comes out of its
 // locker a short card shows how to turn the pages. "?" shows it again.
@@ -852,6 +917,10 @@ tutorial?.addEventListener("click", (event) => { if (event.target === tutorial) 
 document.getElementById("book-help")?.addEventListener("click", () => showTutorial(true));
 
 document.addEventListener("keydown", (event) => {
+  if (!answerView.hidden) {
+    if (["Escape", "Enter", "ArrowRight", "ArrowLeft"].includes(event.key)) { event.preventDefault(); closeAnswer(); }
+    return;
+  }
   if (tutorial && !tutorial.hidden) {
     if (event.key === "Escape" || event.key === "Enter") { event.preventDefault(); hideTutorial(); }
     return;
@@ -873,8 +942,8 @@ document.addEventListener("keydown", (event) => {
 book.addEventListener("click", (event) => {
   const link = event.target.closest("[data-goto]");
   if (link) { event.preventDefault(); goToAnchor(link.dataset.goto); return; }
-  if (event.target.closest("#proposal-accept-yes")) window.location.assign(new URL("./accepted.html", window.location.href).href);
-  else if (event.target.closest("#noButton")) window.location.assign(new URL("./no.html", window.location.href).href);
+  if (event.target.closest("#proposal-accept-yes")) showAnswer("accepted");
+  else if (event.target.closest("#noButton")) showAnswer("no");
 });
 
 window.addEventListener("hashchange", () => {

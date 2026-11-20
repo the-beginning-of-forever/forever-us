@@ -1000,3 +1000,16 @@ blockquote {
   25% { translate: -7px 0; }
   60% { translate: 4px 0; }
 }
+
+/* Yes / No pages shown over the book (keeps full screen). */
+.answer-view {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  overflow-y: auto;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 45%, #2a221c 0%, var(--desk) 70%),
+    var(--desk);
+  animation: answerIn .5s ease both;
+}
+@keyframes answerIn { from { opacity: 0; } }
