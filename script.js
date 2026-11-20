@@ -62,7 +62,7 @@ function measureLayout() {
   if (2 * W > availW) { W = Math.floor(availW / 2); H = Math.floor(W * 1.5); }
   const landscape = vw > vh;
   if (W >= 400 || (landscape && W >= 360)) {
-    return { mode: "spread", W, H, fs: clamp(W / 24, 17, 19), ov: Math.round(clamp(H * .016, 8, 14)) };
+    return { mode: "spread", W, H, fs: clamp(W / 28, 15.5, 17.5), ov: Math.round(clamp(H * .016, 8, 14)) };
   }
 
   // Single portrait page: phones may use a taller page so text gets room.
@@ -70,7 +70,7 @@ function measureLayout() {
   W = Math.floor(Math.min(availW, 640, Math.max(availH / 1.5, availH < 500 ? 600 : 0)));
   if (availW < 520) W = Math.floor(availW);
   H = Math.floor(Math.min(availH, W * 1.85));
-  return { mode: "single", W, H, fs: clamp(W / 21, 16, 18), ov: Math.round(clamp(W * .014, 4, 8)) };
+  return { mode: "single", W, H, fs: clamp(W / 24, 14.5, 16), ov: Math.round(clamp(W * .014, 4, 8)) };
 }
 
 function applyLayout(layout) {
@@ -80,7 +80,7 @@ function applyLayout(layout) {
   root.setProperty("--page-h", `${layout.H}px`);
   root.setProperty("--fs", `${layout.fs.toFixed(2)}px`);
   root.setProperty("--ov", `${layout.ov}px`);
-  root.setProperty("--pad-x", `${Math.round(small ? Math.max(20, layout.W * .07) : layout.W * .11)}px`);
+  root.setProperty("--pad-x", `${Math.round(small ? Math.max(18, layout.W * .06) : layout.W * .11)}px`);
   root.setProperty("--pad-top", `${Math.round(layout.H * (small ? .07 : .085))}px`);
   root.setProperty("--pad-bottom", `${Math.round(layout.H * (small ? .075 : .09))}px`);
   root.setProperty("--fold-r", `${layout.W + layout.H}px`);

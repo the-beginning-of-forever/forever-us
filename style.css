@@ -221,7 +221,7 @@ html, body { height: 100%; margin: 0; }
   background-size: 160px 160px, auto;
   background-blend-mode: soft-light, normal;
   color: var(--ink);
-  font: 400 var(--fs) / 1.5 var(--serif);
+  font: 400 var(--fs) / 1.45 var(--serif);
   font-kerning: normal;
   font-variant-ligatures: common-ligatures;
   text-rendering: optimizeLegibility;
@@ -270,7 +270,7 @@ html, body { height: 100%; margin: 0; }
 .page--overflow .page-text { overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; }
 
 .page-text > :first-child { margin-top: 0; }
-.page p { margin: 0 0 .62em; text-wrap: pretty; }
+.page p { margin: 0 0 .5em; text-wrap: pretty; }
 .page em { font-style: italic; }
 
 .heart {
