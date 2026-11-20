@@ -616,10 +616,10 @@ function currentAnchor() {
   return page.first ? page.section.id : `at-${page.blockId}`;
 }
 
+// The address stays clean (no "#page" part), so any link that is copied,
+// shared or reopened from history starts the book from the beginning.
 function rememberPosition() {
-  const anchor = currentAnchor();
-  const url = anchor ? `#${anchor}` : `${window.location.pathname}${window.location.search}`;
-  if (`#${anchor}` !== window.location.hash || !anchor) window.history.replaceState(null, "", url);
+  if (window.location.hash) window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
 }
 
 function settle() {
@@ -947,7 +947,9 @@ book.addEventListener("click", (event) => {
 });
 
 window.addEventListener("hashchange", () => {
-  if (window.location.hash.slice(1) !== currentAnchor()) goToAnchor(window.location.hash);
+  const anchor = window.location.hash;
+  rememberPosition();
+  if (anchor) goToAnchor(anchor);
 });
 
 /* Drag, swipe, corner peel ------------------------------------------------- */
@@ -1237,7 +1239,10 @@ window.addEventListener("resize", () => {
 
 function start() {
   if (state.ready) return;
-  layoutBook(window.location.hash);
+  // Always open at the beginning (the locker). Only the Yes page's own link
+  // (?answer=yes#our-story-continues) opens straight at its page.
+  const fromYes = new URLSearchParams(window.location.search).get("answer") === "yes";
+  layoutBook(fromYes ? window.location.hash : "");
   book.classList.add("is-ready");
   rememberPosition();
   // Opened straight at the end: the book is already in its locker.
