@@ -617,11 +617,6 @@ blockquote {
 :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 .page :focus-visible { outline-color: var(--accent); }
 
-@media (max-width: 600px) {
-  .control--fullscreen { display: none; }
-  .is-iphone-safari .control--fullscreen { display: inline-flex; }
-}
-
 /* iPhone: how to read in full screen (Add to Home Screen). */
 .install-tip {
   position: fixed;

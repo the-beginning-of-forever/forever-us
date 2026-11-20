@@ -759,6 +759,9 @@ function closeToCover() {
 
 async function takeOut() {
   if (locker.status !== "in") return;
+  // Opening the locker is her first tap: on phones that support it
+  // (Android), go full screen right away. iPhone keeps its own route.
+  if (fullscreenSupported) requestReaderFullscreen();
   const token = ++locker.token;
   locker.status = "coming";
   if (reduceMotion.matches) {
