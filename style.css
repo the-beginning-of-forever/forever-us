@@ -271,7 +271,6 @@ html, body { height: 100%; margin: 0; }
 
 .page-text > :first-child { margin-top: 0; }
 .page p { margin: 0 0 .62em; text-wrap: pretty; }
-.page strong { font-weight: 600; color: #352e26; }
 .page em { font-style: italic; }
 
 .heart {
@@ -317,10 +316,9 @@ html, body { height: 100%; margin: 0; }
 .rule b { font-weight: 400; }
 .rule--small { width: 40%; margin: 0 auto .6em; font-size: .7em; }
 
-.dedication { margin: 0 0 1.6em !important; text-align: center; font-style: italic; color: var(--ink-soft); }
-.verse { margin: 0 0 1.5em; text-align: center; font-style: italic; font-size: 1.06em; }
+.dedication { margin: 0 0 1.6em !important; text-align: center; font-style: italic; font-size: .92em; color: var(--ink-soft); }
+.verse { margin: 0 0 1.5em; text-align: center; font-style: italic; }
 .verse p { margin: 0 0 .3em; }
-.verse--left { text-align: left; font-size: 1em; }
 .aside { text-align: center; color: var(--ink-soft); font-style: italic; font-size: .92em; }
 .aside--end { margin-top: 1.2em !important; }
 .verse--end { margin: 1.4em 0 0; }
@@ -335,14 +333,15 @@ html, body { height: 100%; margin: 0; }
   border-left: 1px dashed rgba(194, 164, 108, .85);
   color: var(--ink-soft);
   font-style: italic;
-  font-size: .9em;
+  font-size: .92em;
 }
 .opener + .note, .promise-intro + .note { margin-top: 0 !important; margin-bottom: 1.4em !important; }
 
 .sub-title {
   margin: 1.1em 0 .55em;
-  color: #3a3028;
+  color: #342b23;
   font: italic 600 calc(var(--fs) * 1.2) / 1.25 var(--display);
+  text-align: center;
   text-wrap: balance;
 }
 .sub-title--center { text-align: center; }
@@ -353,7 +352,6 @@ html, body { height: 100%; margin: 0; }
   padding-left: .9em;
   border-left: 2px solid rgba(194, 164, 108, .7);
   font-style: italic;
-  font-size: 1.04em;
 }
 
 .placeholder {
@@ -405,14 +403,14 @@ html, body { height: 100%; margin: 0; }
 .part-title {
   margin: calc(var(--page-h) * .025) 0 1em;
   color: #342b23;
-  font: 600 calc(var(--fs) * 1.32) / 1.2 var(--display);
+  font: 600 calc(var(--fs) * 1.4) / 1.2 var(--display);
   text-align: center;
   text-wrap: balance;
 }
 .part-numeral { display: block; margin-bottom: .35em; color: var(--gold-deep); font: 500 .5em / 1 var(--serif); letter-spacing: .3em; }
 .opener + .part-title { margin-top: 0; }
 
-.salutation { font: italic 500 1.12em / 1.4 var(--display); }
+.salutation { color: #342b23; font: italic 500 1.2em / 1.35 var(--display); }
 .salutation strong { font-weight: 600; }
 
 .dropcap::first-letter {
@@ -422,8 +420,9 @@ html, body { height: 100%; margin: 0; }
   font: 600 3.25em / .78 var(--display);
 }
 
-.promise-line { color: #2e2720; }
-em.promise-line { font-weight: 500; }
+/* Key lines: one emphasis everywhere - semibold, darker ink, no highlight. */
+.page strong, .promise-line, .page mark, .ul-red { font-weight: 600; color: #2e2720; }
+.page .promise-line, .page mark, .page .ul-red { font-style: inherit; background: none; }
 
 blockquote {
   position: relative;
@@ -432,24 +431,24 @@ blockquote {
   border-left: 1px solid rgba(194, 164, 108, .8);
   font-style: italic;
 }
-.vow { margin: 1.3em 0 1em !important; text-align: center; font-size: .9em; letter-spacing: .07em; }
+.vow { margin: 1.3em 0 1em !important; text-align: center; letter-spacing: .05em; }
 .vow em { font-style: normal; font-weight: 600; }
 .closing { text-align: center; font-style: italic; }
-.signoff { margin-top: .8em !important; text-align: center; font: italic 600 1.25em / 1.3 var(--display); }
+.signoff { margin-top: .8em !important; text-align: center; color: #342b23; font: italic 600 1.2em / 1.3 var(--display); }
 
 /* Family chapter */
 .heart-item { position: relative; padding-left: 1.35em; }
 .heart-item::before { position: absolute; top: .18em; left: 0; color: var(--accent); content: "♥"; font-size: .75em; }
-.statement { margin: 1.1em 0 !important; text-align: center; font-style: italic; font-size: 1.03em; text-wrap: balance; }
+.statement { margin: 1.1em 0 !important; text-align: center; font-style: italic; text-wrap: balance; }
 .statement--strong { font-weight: 500; color: #2e2720; }
-.most-important { margin: 1.3em 0 0 !important; text-align: center; font-size: .78em; letter-spacing: .2em; text-transform: uppercase; }
+.most-important { margin: 1.3em 0 .2em !important; text-align: center; color: var(--gold-deep); font-size: .68em; letter-spacing: .28em; text-transform: uppercase; }
 .most-important strong { font-weight: 500; color: var(--gold-deep); }
-.closing-note { margin-top: 1.4em; text-align: center; color: var(--ink-soft); font-style: italic; font-size: .95em; }
+.closing-note { margin-top: 1.4em; text-align: center; color: var(--ink-soft); font-style: italic; font-size: .92em; }
 
 /* The question */
-.so { margin: .2em 0 .1em !important; text-align: center; font: italic 500 1.35em / 1.2 var(--display); color: var(--ink-soft); }
-.proposal-question { margin: calc(var(--page-h) * .02) 0 .75em !important; text-align: center; color: #342b23; font: 600 calc(var(--fs) * 1.55) / 1.15 var(--display); text-wrap: balance; }
-.proposal-item { position: relative; max-width: 25em; margin: 0 auto .35em !important; padding-left: 1.35em; font-size: .95em; }
+.so { margin: .2em 0 .1em !important; text-align: center; font: italic 500 1.2em / 1.2 var(--display); color: var(--ink-soft); }
+.proposal-question { margin: calc(var(--page-h) * .02) 0 .75em !important; text-align: center; color: #342b23; font: 600 calc(var(--fs) * 1.62) / 1.15 var(--display); text-wrap: balance; }
+.proposal-item { position: relative; max-width: 25em; margin: 0 auto .35em !important; padding-left: 1.35em; }
 .proposal-item::before { position: absolute; top: .02em; left: 0; color: var(--accent); content: "♡"; }
 .proposal-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75em; margin: 1em 0 .8em; }
 .proposal-yes,
@@ -472,11 +471,11 @@ blockquote {
 .proposal-yes:hover { background: #7c4640; transform: translateY(-1px); }
 .proposal-no { border: 1px solid rgba(64, 56, 47, .32); background: transparent; color: var(--ink-soft); }
 .proposal-no:hover { background: rgba(64, 56, 47, .06); }
-.proposal-footer { margin-bottom: 0 !important; text-align: center; color: var(--ink-soft); font-style: italic; font-size: .9em; }
+.proposal-footer { margin-bottom: 0 !important; text-align: center; color: var(--ink-soft); font-style: italic; font-size: .92em; }
 
 /* Finale */
 .finale-text { text-align: center; font-style: italic; }
-.finale-line { margin: 1.4em 0 .4em !important; text-align: center; color: #342b23; font: italic 600 1.45em / 1.2 var(--display); }
+.finale-line { margin: 1.4em 0 .4em !important; text-align: center; color: #342b23; font: italic 600 1.4em / 1.2 var(--display); }
 
 /* 7. Covers & endpapers --------------------------------------------------- */
 .cover-face,
