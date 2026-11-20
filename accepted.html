@@ -18,7 +18,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./style.css?v=65">
+    <link rel="stylesheet" href="./style.css?v=67">
   </head>
   <body class="reader standalone">
     <main class="page" aria-labelledby="acceptance-title">
@@ -29,7 +29,11 @@
       <p class="finale-line">I Love You So Much, My Bangaram!</p>
       <p>Ee kshanam nunchi, mana forever ni manam kalisi raaddam. Prathi situation lo nee pakkane untaanu — ninnu preminchi, support chesi, prathi roju ninne enchukuntaanu. Chandamama saakshiga.&nbsp;<span class="heart" aria-hidden="true">♥</span></p>
       <div class="rule rule--small" aria-hidden="true"><span></span><b>♥</b><span></span></div>
-      <p><a class="standalone-link" href="./index.html#our-story-continues">Turn to the final page →</a></p>
+      <p><a class="standalone-link" href="./index.html?answer=yes#our-story-continues">Turn to the final page →</a></p>
     </main>
+    <script>
+      // She said yes: the book's final page is now part of the book.
+      try { localStorage.setItem("book-answer", "yes"); } catch { /* storage unavailable; the link carries it */ }
+    </script>
   </body>
 </html>

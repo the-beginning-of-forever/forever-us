@@ -88,7 +88,17 @@ function applyLayout(layout) {
 
 // Prepare the source once: build the TOC and give every block a stable id.
 const source = content.content.cloneNode(true);
-const sections = [...source.children].filter((node) => node.classList.contains("book-section"));
+// The final page ("Our Story Continues") stays sealed until she says yes.
+// accepted.html records the answer, and its link also carries ?answer=yes.
+const answered = (() => {
+  const fromLink = new URLSearchParams(window.location.search).get("answer") === "yes";
+  try {
+    if (fromLink) window.localStorage.setItem("book-answer", "yes");
+    return fromLink || window.localStorage.getItem("book-answer") === "yes";
+  } catch { return fromLink; }
+})();
+const sections = [...source.children].filter((node) => node.classList.contains("book-section")
+  && (answered || !node.hasAttribute("data-after-yes")));
 const coverFront = source.querySelector('[data-cover="front"]');
 const coverBack = source.querySelector('[data-cover="back"]');
 
@@ -635,6 +645,7 @@ async function turnTo(target) {
   if (!state.ready || locker.status !== "out") return;
   target = clamp(target, 0, maxK());
   if (target === state.k) return;
+  if (!answered && target > state.k && (target >= maxK() || isBlankEnd(target))) { askForAnswer(); return; }
   if (state.busy) { state.queued = Math.sign(target - state.k); return; }
 
   const forward = target > state.k;
@@ -675,7 +686,25 @@ function isBlankEnd(k) {
   return state.mode === "spread" && k === state.leaves.length - 1 && state.leaves[k - 1]?.back.kind === "blank";
 }
 
+// Before she answers, the question is the last page: the book won't turn on.
+const sealedAhead = () => !answered && (state.k + 1 >= maxK() || isBlankEnd(state.k + 1));
+const toast = document.getElementById("book-toast");
+let toastTimer = 0;
+function askForAnswer() {
+  if (!toast) return;
+  toast.hidden = false;
+  toast.classList.remove("is-showing");
+  void toast.offsetWidth;
+  toast.classList.add("is-showing");
+  book.classList.remove("is-nudged");
+  void book.offsetWidth;
+  book.classList.add("is-nudged");
+  window.clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(() => { toast.hidden = true; }, 2600);
+}
+
 function go(direction) {
+  if (direction > 0 && sealedAhead()) { askForAnswer(); return; }
   if (direction > 0 && state.k === 0) requestReaderFullscreen();
   let target = state.k + direction;
   if (isBlankEnd(target)) target += direction;
@@ -871,7 +900,7 @@ function cornerZone(point) {
   const { W, H, k } = state;
   const size = Math.min(90, W * .2);
   if (point.y < H - size * 1.4 || point.y > H + 4) return 0;
-  if (point.x > W - size && point.x < W + 6 && k < maxK()) return 1;
+  if (point.x > W - size && point.x < W + 6 && k < maxK() && !sealedAhead()) return 1;
   if (state.mode === "spread" && point.x < -W + size && point.x > -W - 6 && k > 0) return -1;
   return 0;
 }
@@ -928,6 +957,7 @@ book.addEventListener("pointermove", (event) => {
     const forward = dx < 0;
     const index = forward ? state.k : state.k - 1;
     if (forward ? state.k >= maxK() : state.k <= 0) { drag = null; return; }
+    if (forward && sealedAhead()) { drag = null; askForAnswer(); return; }
     const leaf = state.leaves[index];
     if (peel?.leaf !== leaf) setPeel(0);
     peel = null;

@@ -967,3 +967,36 @@ blockquote {
   .tutorial-fold { animation: none; width: 40px; height: 40px; }
   .tutorial-hand { animation: none; translate: -30px -24px; }
 }
+
+/* "Answer first" note when she tries to turn past the question. */
+.book-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--controls-h) + 10px);
+  z-index: 15;
+  max-width: calc(100vw - 32px);
+  margin: 0;
+  padding: .6em 1.1em;
+  border-radius: 999px;
+  background: rgba(36, 28, 22, .94);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .4);
+  color: var(--paper);
+  width: max-content;
+  font: italic 500 .95rem / 1.3 var(--serif);
+  text-align: center;
+  white-space: nowrap;
+  translate: -50% 0;
+  pointer-events: none;
+}
+.book-toast.is-showing { animation: toastIn 2.6s ease both; }
+@keyframes toastIn {
+  0% { opacity: 0; translate: -50% 8px; }
+  10%, 85% { opacity: 1; translate: -50% 0; }
+  100% { opacity: 0; translate: -50% 0; }
+}
+.book.is-nudged { animation: bookNudge .45s ease; }
+@keyframes bookNudge {
+  0%, 100% { translate: 0 0; }
+  25% { translate: -7px 0; }
+  60% { translate: 4px 0; }
+}

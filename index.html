@@ -18,10 +18,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./style.css?v=65">
+    <link rel="stylesheet" href="./style.css?v=67">
     <script src="./sounds/recordings.js?v=48" defer></script>
     <script src="./book-sound.js?v=49" defer></script>
-    <script src="./script.js?v=61" defer></script>
+    <script src="./script.js?v=62" defer></script>
   </head>
   <body class="reader">
     <main class="desk" id="desk">
@@ -68,6 +68,8 @@
         <span aria-hidden="true">⤢</span>
       </button>
     </nav>
+
+    <p class="book-toast" id="book-toast" role="status" aria-live="polite" hidden>Mundhu nee answer cheppu, Bangaram <span class="emoji">😄</span></p>
 
     <div class="tutorial" id="tutorial" role="dialog" aria-modal="true" aria-labelledby="tutorial-title" hidden>
       <div class="tutorial-card">
@@ -218,7 +220,7 @@
         <p>Ippudu cheppe promise — naa heart lo chaala lothu nunchi vasthondhi.</p>
         <p><strong>Pelli lo nenu pattukunedhi nee chethi okkate kaadhu — ninnu inta preminchi, inta muddu ga penchina nee family chethi kuda.</strong></p>
         <p>Nee parents navvu, vaalla health, vaalla bhaadhyathalu, vaalla chinna chinna chinthalu — ivanni ippudu naa list lo kuda unnayi.</p>
-        <p>Vaalla intlo nenu puttaledhu. Kaani vaalla gundelo oka koduku chotu — adi naa prema tho, naa actions tho sampadinchukuntaanu.</p>
+        <p>Mii intlo nenu puttaledhu. Kaani vaalla gundelo oka koduku chotu — adi naa prema tho, naa actions tho sampadinchukuntaanu.</p>
         <p>"Alludu garu" ani maryadha ichi dooram ga kurchobette guest la kaadhu — "Orey nanna" ani pilichi pani cheppe koduku la undali.</p>
         <p>"Naa vaallani vadilesi vachanu" ane feeling nee manasulo okka roju kuda raakudadhu. Pelli ante oka gadapa daatadam kaadhu — inko gadapa nee kosam therchukovadam.</p>
         <p><em class="promise-line">Nee family bhaadhyathalu naaku eppatiki burden kaadhu — avi naa bhaadhyathalu kuda.</em> Vaallani naa vaallu laage chusukuntaanu.</p>
@@ -329,7 +331,7 @@
         <p class="proposal-footer">Mana forever start avvadaniki wait cheyyalekapothunna. I Love You, My Bangaram!</p>
       </section>
 
-      <section class="book-section finale" id="our-story-continues" data-title="Our Story Continues" data-toc="Our Story Continues">
+      <section class="book-section finale" id="our-story-continues" data-title="Our Story Continues" data-toc="Our Story Continues" data-after-yes>
         <header class="opener">
           <p class="opener-label">Final Page</p>
           <h2 class="opener-title">Our Story Continues</h2>
