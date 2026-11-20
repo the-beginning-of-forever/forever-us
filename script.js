@@ -181,6 +181,14 @@ function paginate() {
       page = createPage(section, false);
       pages.push(page);
       page.text.append(...carry);
+      // On very short pages a heading and its first paragraph may not fit
+      // together even on a fresh page; then the paragraph starts the next one.
+      if (carry.length > 1 && overflows(page)) {
+        block.remove();
+        page = createPage(section, false);
+        pages.push(page);
+        page.text.append(block);
+      }
       if (overflows(page)) page.el.classList.add("page--overflow");
     }
   }
